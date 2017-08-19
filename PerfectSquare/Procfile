@@ -1,0 +1,1 @@
+web: gunicorn --env DJANGO_SETTINGS_MODULE=PerfectSquare.settings PerfectSquare.wsgi --log-file -
