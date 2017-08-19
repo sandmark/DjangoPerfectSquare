@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrapform',  # django-bootstrap-form
     'gunicorn',
+    'cms'
 ]
 
 MIDDLEWARE = [
