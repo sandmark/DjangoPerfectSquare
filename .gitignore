@@ -2,4 +2,8 @@
 db.sqlite3
 
 PerfectSquare/__pycache__/
+<<<<<<< HEAD
 /PerfectSquare/staticfiles/
+=======
+PerfectSquare/staticfiles/
+>>>>>>> 0.1.1.3
