@@ -1,6 +1,6 @@
 from django.contrib import admin
-from cms.models import Movie, Tag
+from cms.models import Content, Tag
 
 # Register your models here.
-admin.site.register(Movie)
+admin.site.register(Content)
 admin.site.register(Tag)
