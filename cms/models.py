@@ -11,7 +11,7 @@ class Tag(models.Model):
 class Content(models.Model):
     """コンテンツ"""
     title    = models.CharField('タイトル', max_length=255)
-    filepath = models.FileField(upload_to='video/', max_length=255)
+    filepath = models.FileField(upload_to='contents/', max_length=255)
     tags     = models.ManyToManyField(Tag)
 
     def __str__(self):
