@@ -16,3 +16,12 @@ class Content(models.Model):
 
     def __str__(self):
         return self.title
+
+# Receive the pre_delete signal and delete the file associated with the model instance.
+from django.db.models.signals import pre_delete
+from django.dispatch.dispatcher import receiver
+
+@receiver(pre_delete, sender=Content)
+def content_delete(sender, instance, **kwargs):
+    if instance.filepath:
+        instance.filepath.delete(False)
