@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     's3direct',
     'bootstrapform',  # django-bootstrap-form
     'gunicorn',
@@ -142,3 +143,5 @@ S3DIRECT_DESTINATIONS = {
         'key': 'contents'
     }
 }
+
+SITE_ID = 1
