@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'registration',
+    'invitations',
     's3direct',
     'bootstrapform',  # django-bootstrap-form
     'gunicorn',
@@ -159,3 +160,7 @@ EMAIL_USE_TLS       = True
 
 # Registration Settings
 ACCOUNT_ACTIVATION_DAYS = 1
+
+# Invitation Settings
+INVITATIONS_INVITATION_EXPIRY = 1
+INVITATIONS_INVITATION_ONLY = True
