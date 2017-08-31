@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h3>ログイン</h3>
+
+<form class="form-inline" method="POST" action="{% url 'account_login' %}" >
+  {% csrf_token %}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{redirect_field_value}}" value="{{redirect_field_value}}">
+  {% endif %}
+  <div class="form-group">
+    <label for="id_login" class="sr-only">メールアドレス</label>
+    <input type="text" class="form-control" name="login" id="id_login" placeholder="メールアドレス" autofocus="autofocus" required id="id_login">
+  </div>
+
+  <div class="form-group mx-sm-3">
+    <label for="id_password" class="sr-only">パスワード</label>
+    <input type="password" class="form-control" name="password" id="id_password" placeholder="パスワード" required id="id_password">
+  </div>
+
+  <div class="form-check mx-sm-3" >
+    <label class="form-check-label" >
+      <input class="form-check-input" type="checkbox" value="" >
+      ログインしたままにする
+    </label>
+  </div>
+
+  <button type="submit" class="btn btn-default">ログイン</button>
+</form>
+{% endblock content %}
