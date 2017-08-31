@@ -1,17 +1,47 @@
-{% extends 'bootstrap4/bootstrap4.html' %}
-{% load bootstrap4 %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-{% block bootstrap4_content %}
-<div class="container">
-  <h1>{% block title %}PerfectSquare{% endblock %}</h1>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 
-  <p>
-    <a href"#home">home</a>
-  </p>
+    <!-- Original Code -->
+    <title>{% block title %}Perfect Square{% endblock title %}</title>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Navbar -->
+      <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">PerfectSquare</a>
 
-  {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+        <!-- Logout -->
+        {% if user.is_authenticated %}
+        <ul class="nav navbar-nav navbar-right">
+          <form class="form-inline" method="POST" action="{% url 'account_logout' %}">
+            {% csrf_token %}
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_value }}" value="{{ redirect_field_value}}" >
+            {% endif %}
+            <button class="btn btn-sm btn-outline-secondary align-middle" type="submit">
+              ログアウト
+            </button>
+          </form>
+        </ul>
+        {% endif %}
+      </nav>
 
-  {% block content %}(content){% endblock content %}
-</div>
+      <!-- content -->
+      {% block content %}
+      {% endblock content %}
+    </div>
 
-{% endblock bootstrap4_content %}
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+  </body>
+</html>
