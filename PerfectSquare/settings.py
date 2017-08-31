@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import dj_database_url
+from registration_defaults.settings import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -35,12 +36,16 @@ ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(',')
 # Application definition
 
 INSTALLED_APPS = [
+    'registration_defaults',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'registration',
+    'invitations',
     's3direct',
     'bootstrapform',  # django-bootstrap-form
     'gunicorn',
@@ -62,7 +67,7 @@ ROOT_URLCONF = 'PerfectSquare.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['cms/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -142,3 +147,20 @@ S3DIRECT_DESTINATIONS = {
         'key': 'contents'
     }
 }
+
+# sites
+SITE_ID = 1
+
+# Email
+EMAIL_HOST_USER     = os.environ['SENDGRID_USERNAME']
+EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
+EMAIL_HOST          = 'smtp.sendgrid.net'
+EMAIL_PORT          = 587
+EMAIL_USE_TLS       = True
+
+# Registration Settings
+ACCOUNT_ACTIVATION_DAYS = 1
+
+# Invitation Settings
+INVITATIONS_INVITATION_EXPIRY = 1
+INVITATIONS_INVITATION_ONLY = True
