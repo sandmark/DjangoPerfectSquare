@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import dj_database_url
-from registration_defaults.settings import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -36,7 +35,6 @@ ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(',')
 # Application definition
 
 INSTALLED_APPS = [
-    'registration_defaults',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,7 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'registration',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     'invitations',
     's3direct',
     'bootstrapform',  # django-bootstrap-form
@@ -158,9 +158,14 @@ EMAIL_HOST          = 'smtp.sendgrid.net'
 EMAIL_PORT          = 587
 EMAIL_USE_TLS       = True
 
-# Registration Settings
-ACCOUNT_ACTIVATION_DAYS = 1
+# All Auth
+AUTHENTICATIONS_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
 
 # Invitation Settings
+ACCOUNT_ADAPTER = 'invitations.models.InvitationsAdapter'
+INVITATIONS_ADAPTER = ACCOUNT_ADAPTER
 INVITATIONS_INVITATION_EXPIRY = 1
 INVITATIONS_INVITATION_ONLY = True
