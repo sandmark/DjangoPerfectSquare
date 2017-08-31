@@ -21,4 +21,6 @@ urlpatterns = [
     url(r'^s3direct/', include('s3direct.urls')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^invitations/', include('invitations.urls', namespace='invitations')),
+
+    url(r'^cms/', include('cms.urls', namespace='cms')),
 ]

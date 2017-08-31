@@ -42,12 +42,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'bootstrap4',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'invitations',
     's3direct',
-    'bootstrapform',  # django-bootstrap-form
     'gunicorn',
     'cms'
 ]
@@ -67,7 +67,7 @@ ROOT_URLCONF = 'PerfectSquare.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['cms/templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
