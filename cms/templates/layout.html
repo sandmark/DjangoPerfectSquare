@@ -33,6 +33,13 @@
         {% endif %}
       </nav>
 
+      <!-- Alerts/Messages -->
+      {% for message in messages %}
+      <div class="alert alert-primary" role="alert">
+        {{message}}
+      </div>
+      {% endfor %}
+
       <!-- content -->
       {% block content %}
       {% endblock content %}
