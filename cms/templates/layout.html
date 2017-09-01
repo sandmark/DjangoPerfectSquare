@@ -65,7 +65,8 @@
           <ul class="nav flex-column">
             {% for tag in all_tags %}
             <li class="nav-item" >
-              <a class="nav-link" href="#">{{tag.name}}</a>
+              <a class="nav-link"
+                 href="{% url 'cms:tagged_contents' tag.id %}">{{tag.name}}</a>
             </li>
             {% endfor %}
           </ul>
