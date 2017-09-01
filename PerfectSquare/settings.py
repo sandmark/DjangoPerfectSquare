@@ -41,8 +41,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'invitations',
     's3direct',
-    'bootstrapform',  # django-bootstrap-form
     'gunicorn',
     'cms'
 ]
@@ -62,7 +66,10 @@ ROOT_URLCONF = 'PerfectSquare.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'templates', 'allauth'),
+                     ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -142,3 +149,26 @@ S3DIRECT_DESTINATIONS = {
         'key': 'contents'
     }
 }
+
+# sites
+SITE_ID = 1
+
+# Email
+EMAIL_HOST_USER     = os.environ['SENDGRID_USERNAME']
+EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
+EMAIL_HOST          = 'smtp.sendgrid.net'
+EMAIL_PORT          = 587
+EMAIL_USE_TLS       = True
+
+# All Auth
+AUTHENTICATIONS_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+LOGIN_REDIRECT_URL = '/'
+
+# Invitation Settings
+ACCOUNT_ADAPTER = 'invitations.models.InvitationsAdapter'
+INVITATIONS_ADAPTER = ACCOUNT_ADAPTER
+INVITATIONS_INVITATION_EXPIRY = 1
+INVITATIONS_INVITATION_ONLY = True
