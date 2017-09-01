@@ -11,17 +11,21 @@
 {% endblock alert %}
 
 {% block content %}
-{% for content in recent_contents %}
-<div class="card" style="width: 20rem;" >
-  <div class="card-body" >
-    <h4>{{ content.title }}</h4>
-    <p class="card-text" >
-      {% for tag in content.tags.all %}
-      <span class="badge badge-secondary">{{ tag }}</span>
-      {% endfor %}
-    </p>
-    <a href="{{content.filepath}}" class="btn btn-primary" >ダウンロード</a>
+<div class="row" >
+  {% for content in recent_contents %}
+  <div class="col-sm-3">
+    <div class="card" style="width: 20rem;" >
+      <div class="card-body" >
+        <h4>{{ content.title }}</h4>
+        <p class="card-text" >
+          {% for tag in content.tags.all %}
+          <span class="badge badge-secondary">{{ tag }}</span>
+          {% endfor %}
+        </p>
+        <a href="{{content.filepath}}" class="btn btn-primary" >ダウンロード</a>
+      </div>
+    </div>
   </div>
+  {% endfor %}
 </div>
-{% endfor %}
 {% endblock content %}
