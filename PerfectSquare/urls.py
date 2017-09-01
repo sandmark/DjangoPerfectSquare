@@ -22,5 +22,5 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
     url(r'^invitations/', include('invitations.urls', namespace='invitations')),
 
-    url(r'^', include('cms.urls', namespace='cms')),
+    url(r'^$', include('cms.urls', namespace='cms')),
 ]

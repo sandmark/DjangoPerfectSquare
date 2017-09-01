@@ -165,6 +165,7 @@ AUTHENTICATIONS_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
+LOGIN_REDIRECT_URL = '/'
 
 # Invitation Settings
 ACCOUNT_ADAPTER = 'invitations.models.InvitationsAdapter'
