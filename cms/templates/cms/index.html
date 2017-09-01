@@ -23,6 +23,9 @@
           {% endfor %}
         </p>
         <a href="{{content.filepath}}" class="btn btn-primary" >ダウンロード</a>
+        {% if content.filepath|default:""|slice:"-3:" == "mp4" %}
+        <a href="{% url 'cms:watch' content.id %}" class="btn btn-secondary">視聴</a>
+        {% endif %}
       </div>
     </div>
   </div>
