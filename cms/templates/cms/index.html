@@ -1,5 +1,4 @@
 {% extends 'layout.html' %}
-{% block title %}最近更新されたファイル - PerfectSquare{% endblock %}
 
 {% block alert %}
 {% if no_contents %}
@@ -11,24 +10,5 @@
 {% endblock alert %}
 
 {% block content %}
-<div class="row" >
-  {% for content in recent_contents %}
-  <div class="col-sm-3">
-    <div class="card" style="width: 20rem;" >
-      <div class="card-body" >
-        <h4>{{ content.title }}</h4>
-        <p class="card-text" >
-          {% for tag in content.tags.all %}
-          <span class="badge badge-secondary">{{ tag }}</span>
-          {% endfor %}
-        </p>
-        <a href="{{content.filepath}}" class="btn btn-primary" >ダウンロード</a>
-        {% if content.filepath|default:""|slice:"-3:" == "mp4" %}
-        <a href="{% url 'cms:watch' content.id %}" class="btn btn-secondary">視聴</a>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-  {% endfor %}
-</div>
+{% include 'cms/_contents.html' %}
 {% endblock content %}

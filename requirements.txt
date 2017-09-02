@@ -9,6 +9,7 @@ django-allauth==0.33.0
 django-bootstrap4==0.0.1
 django-dotenv==1.4.1
 django-invitations==1.9.1
+django-pure-pagination==0.3.0
 django-s3direct==1.0.1.dev1
 django-storages==1.6.5
 docutils==0.14
