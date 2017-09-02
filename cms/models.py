@@ -5,7 +5,7 @@ from django.contrib.sites.models import Site
 # Create your models here.
 class Tag(models.Model):
     """タグ"""
-    name  = models.CharField('名前', max_length=255)
+    name  = models.CharField('名前', max_length=255, unique=True)
     sites = models.ManyToManyField(Site)
 
     def __str__(self):
