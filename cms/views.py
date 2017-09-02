@@ -24,6 +24,6 @@ def watch(request, content_id):
 @login_required
 def tagged_contents(request, tag_id):
     tag = get_object_or_404(Tag, pk=tag_id)
-    contents = Content.objects.filter(tags__id__exact=tag.id)
+    contents = Content.objects.filter(tags__id__exact=tag.id).order_by('title')
     context = {'contents': contents, 'tag': tag}
     return render(request, 'cms/tagged_contents.html', context)
