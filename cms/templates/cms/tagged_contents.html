@@ -1,22 +1,5 @@
 {% extends 'layout.html' %}
 {% block content %}
 <h3>タグ '{{ tag.name }}' に該当するコンテンツ</h3>
-<table class="table table-striped">
-  <tbody>
-    {% for content in contents %}
-    <tr>
-      <td>{{ content.title }}</td>
-      <td>
-        {% for current_tag in content.tags.all %}
-        <span class="badge badge-secondary" >{{current_tag.name}}</span>
-        {% endfor %}
-      </td>
-      <td>
-        <a class="btn btn-primary btn-sm" href="{{content.filepath}}">ダウンロード</a>
-        <a class="btn btn-secondary btn-sm" href="{% url 'cms:watch' content.id %}">視聴</a>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+{% include 'cms/_contents.html' %}
 {% endblock %}
