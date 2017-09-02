@@ -1,6 +1,6 @@
 <table class="table table-striped">
   <tbody>
-    {% for content in contents %}
+    {% for content in contents.object_list %}
     <tr>
       <td>{{ content.title }}</td>
       <td>
@@ -16,3 +16,44 @@
     {% endfor %}
   </tbody>
 </table>
+
+<!-- Pagination -->
+<ul class="pagination">
+  {% if contents.has_previous %}
+  <li class="page-item">
+  {% else %}
+  <li class="page-item disabled" >
+  {% endif %}
+
+    <a class="page-link" href="?{{contents.previous_page_number.querystring}}"
+       aria-label="Previous" >
+      <span aria-hidden="true" >&laquo;</span>
+      <span class="sr-only">前へ</span>
+    </a>
+  </li>
+
+  {% for page in contents.pages %}
+  {% if page %}
+  {% if page == contents.number %}
+  <li class="page-item active">
+  {% else %}
+  <li class="page-item" >
+  {% endif %}
+    <a class="page-link" href="?{{ page.querystring}}" >{{ page }}</a>
+  </li>
+  {% else %}
+  <li class="page-item disabled" ><a href="#" class="page-link" >...</a></li>
+  {% endif %}
+  {% endfor %}
+  {% if contents.has_next %}
+  <li class="page-item">
+  {% else %}
+  <li class="page-item disabled" >
+  {% endif %}
+    <a class="page-link" href="?{{contents.next_page_number.querystring}}"
+       aria-label="Previous" >
+      <span aria-hidden="true" >&raquo;</span>
+      <span class="sr-only">次へ</span>
+    </a>
+  </li>
+</ul>

@@ -1,15 +1,23 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render_to_response
+from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import Content, Tag
 
 # Create your views here.
 @login_required
 def index(request):
-    contents = Content.objects.all()
+    all_contents = Content.objects.all().order_by('title')
+
+    try:
+        page = request.GET.get('page', 1)
+    except PageNotAnInteger:
+        page = 1
+
+    p = Paginator(all_contents, 10, request=request)
+    contents = p.page(page)
     context = {
         'contents': contents,
         'no_contents': not bool(contents)
@@ -25,7 +33,16 @@ def watch(request, content_id):
 @login_required
 def tagged_contents(request, tag_id):
     tag = get_object_or_404(Tag, pk=tag_id)
-    contents = Content.objects.filter(tags__id__exact=tag.id).order_by('title')
+    all_contents = Content.objects.filter(tags__id__exact=tag.id).order_by('title')
+
+    try:
+        page = request.GET.get('page', 1)
+    except PageNotAnInteger:
+        page = 1
+
+    p = Paginator(all_contents, 10, request=request)
+    contents = p.page(page)
+
     context = {'contents': contents, 'tag': tag}
     return render(request, 'cms/tagged_contents.html', context)
 

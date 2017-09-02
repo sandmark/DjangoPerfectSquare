@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'invitations',
     's3direct',
+    'pure_pagination',
     'gunicorn',
     'cms'
 ]
@@ -172,3 +173,10 @@ ACCOUNT_ADAPTER = 'invitations.models.InvitationsAdapter'
 INVITATIONS_ADAPTER = ACCOUNT_ADAPTER
 INVITATIONS_INVITATION_EXPIRY = 1
 INVITATIONS_INVITATION_ONLY = True
+
+# Pagination
+PAGINATION_SETTINGS = {
+    'PAGE_RANGE_DISPLAYED': 3,
+    'MARGIN_PAGES_DISPLAYED': 1,
+    'SHOW_FIRST_PAGE_WHEN_INVALID': True,
+}
