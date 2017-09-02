@@ -12,8 +12,8 @@
         {% endfor %}
       </td>
       <td>
-        <a class="btn btn-primary" href="{{content.filepath}}">ダウンロード</a>
-        <a class="btn btn-secondary" href="{% url 'cms:watch' content.id %}">視聴</a>
+        <a class="btn btn-primary btn-sm" href="{{content.filepath}}">ダウンロード</a>
+        <a class="btn btn-secondary btn-sm" href="{% url 'cms:watch' content.id %}">視聴</a>
       </td>
     </tr>
     {% endfor %}
