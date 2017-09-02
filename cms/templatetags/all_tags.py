@@ -6,4 +6,4 @@ register = template.Library()
 
 @register.assignment_tag
 def get_all_tags():
-    return Tag.objects.order_by('name').all()
+    return Tag.objects.all().order_by('name')
