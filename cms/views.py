@@ -82,3 +82,42 @@ def parse_text_contents(context):
             title = line
     context['contents'] = contents
     return context
+
+@login_required
+def tagging_form(request):
+    if not request.user.is_staff:
+        messages.add_message(request, messages.INFO, '権限がありません。')
+        return redirect('/')
+    tags = Tag.objects.all().order_by('name')
+    return render(request, 'cms/tagging_form.html', {'tags': tags})
+
+@login_required
+def tagging_search(request):
+    selected_tags = request.GET.getlist('selected_tags', False)
+    tags = Tag.objects.all().order_by('name')
+    if not selected_tags:
+        selected_tags = []
+    else:
+        selected_tags = Tag.objects.filter(id__in=selected_tags)
+    contents = Content.objects.filter(tags__id__in=selected_tags).order_by('title').distinct()
+    context = {
+        'tags': tags,
+        'selected_tags': selected_tags,
+        'contents': contents
+    }
+    return render(request, 'cms/tagging_search.html', context)
+
+@login_required
+def tagging_set(request):
+    selected_tags = request.POST.getlist('selected_tags', False)
+    selected_contents = request.POST.getlist('selected_contents', False)
+    if not selected_tags or not selected_contents:
+        messages.add_message(request, messages.INFO, 'タグ・コンテンツを指定してください。')
+        return redirect('cms:tagging')
+    contents = Content.objects.filter(id__in=selected_contents)
+    context = {'contents': contents}
+    for content in contents:
+        content.tags = selected_tags
+        content.save()
+    messages.add_message(request, messages.INFO, '{}個のコンテンツを処理しました。'.format(len(contents)))
+    return redirect('/')
