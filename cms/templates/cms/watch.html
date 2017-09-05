@@ -1,11 +1,27 @@
 {% extends 'layout.html' %}
+{% load static %}
+
 {% block content %}
-<h3>{{content.title}}</h3>
-<div class="row">
-  <div class="mx-auto">
-    <video name="{{content.title}}" controls>
-      <source src="{{content.filepath}}" type="video/mp4">
-    </video>
+<script src="/static/jwplayer.js" type="text/javascript"></script>
+<script src="/static/jwplayer.html5.js" type="text/javascript"></script>
+<div class="card bg-light col-xs-8" >
+  <div class="card-header" >{{content.title}}</div>
+  <div class="card-body" >
+    <h6 class="card-title" >
+      {% for tag in content.tags.all %}
+      <span class="badge badge-secondary" >{{tag.name}}</span>
+      {% endfor %}
+    </h4>
+    <div class="embed-responsive embed-responsive-16by9 mx-auto" id="jwplayer" >
+      <script type='text/javascript'>
+       jwplayer('jwplayer').setup({
+         "width":"768",
+         "height":"432",
+         "file":"{{content.filepath}}"
+       });
+      </script>
+    </div>
   </div>
 </div>
+
 {% endblock %}
