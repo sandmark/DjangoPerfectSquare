@@ -1,11 +1,20 @@
 {% extends 'layout.html' %}
 {% block content %}
-<h3>{{content.title}}</h3>
-<div class="row">
-  <div class="mx-auto">
-    <video name="{{content.title}}" controls>
-      <source src="{{content.filepath}}" type="video/mp4">
-    </video>
+
+<div class="card bg-light col-xs-8" >
+  <div class="card-header" >{{content.title}}</div>
+  <div class="card-body" >
+    <h6 class="card-title" >
+      {% for tag in content.tags.all %}
+      <span class="badge badge-secondary" >{{tag.name}}</span>
+      {% endfor %}
+    </h4>
+    <div class="embed-responsive embed-responsive-16by9">
+      <video name="{{content.title}}" controls preload>
+        <source src="{{content.filepath}}" type="video/mp4">
+      </video>
+    </div>
   </div>
 </div>
+
 {% endblock %}
