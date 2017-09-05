@@ -1,16 +1,19 @@
+{% load is_playable %}
 <table class="table table-striped">
   <tbody>
     {% for content in contents.object_list %}
     <tr>
-      <td>{{ content.title }}</td>
       <td>
-        {% for current_tag in content.tags.all %}
-        <span class="badge badge-secondary" >{{current_tag.name}}</span>
-        {% endfor %}
-      </td>
-      <td>
-        <a class="btn btn-primary btn-sm" href="{{content.filepath}}">ダウンロード</a>
-        <a class="btn btn-secondary btn-sm" href="{% url 'cms:watch' content.id %}">視聴</a>
+        {% is_playable content as playable %}
+        {% if playable %}
+        <a href="{% url 'cms:watch' content.id %}" >
+          {{ content.title }}
+        </a>
+        {% else %}
+        <a href="{{ content.filepath }}" >
+          {{ content.title }}
+        </a>
+        {% endif %}
       </td>
     </tr>
     {% endfor %}
