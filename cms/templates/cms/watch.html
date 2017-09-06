@@ -6,14 +6,7 @@
 <div class="card bg-light col-xs-8" >
   <div class="card-header">
     <ul class="nav nav-tabs card-header-tabs" >
-      {% block navlink %}
-      <li class="nav-item">
-        <a class="nav-link active">HTML5</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'cms:watch_flash' content.id %}">Flash</a>
-      </li>
-      {% endblock %}
+      {% block navlink %}{% endblock %}
     </ul>
   </div>
   <div class="card-body" >
@@ -46,9 +39,7 @@
       {% endfor %}
     </h6>
     <div class="embed-responsive embed-responsive-16by9">
-      {% block player %}
-      <video src="{{content.filepath}}" type="video/mp4" controls preload></video>
-      {% endblock %}
+      {% block player %}{% endblock %}
     </div> <!-- END: embed-responsive embed-responsive-16by9 -->
   </div>
 </div>

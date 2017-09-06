@@ -26,7 +26,7 @@ def index(request):
 
 @login_required
 def watch(request, content_id):
-    return render_content(content_id, 'cms/watch.html', request)
+    return render_content(content_id, 'cms/watch_html5.html', request)
 
 @login_required
 def watch_flash(request, content_id):
