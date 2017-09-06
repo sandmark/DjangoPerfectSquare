@@ -80,7 +80,7 @@ def parse_text_contents(context):
     for line in context['text_contents'].split('\n'):
         if title:
             url = 'https://s3-ap-northeast-1.amazonaws.com/private-square/{}'.format(line)
-            content = Content(title=title, filepath=url)
+            content = Content(title=title.strip(), filepath=url.strip())
             content.save()
             content.tags = context['tags']
             contents.append(content)
