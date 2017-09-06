@@ -26,9 +26,16 @@ def index(request):
 
 @login_required
 def watch(request, content_id):
+    return render_content(content_id, 'cms/watch_html5.html', request)
+
+@login_required
+def watch_flash(request, content_id):
+    return render_content(content_id, 'cms/watch_flash.html', request)
+
+def render_content(content_id, template, request):
     content = get_object_or_404(Content, pk=content_id)
     context = {'content': content}
-    return render(request, 'cms/watch.html', context)
+    return render(request, template, context)
 
 @login_required
 def tagged_contents(request, tag_id):
@@ -73,7 +80,7 @@ def parse_text_contents(context):
     for line in context['text_contents'].split('\n'):
         if title:
             url = 'https://s3-ap-northeast-1.amazonaws.com/private-square/{}'.format(line)
-            content = Content(title=title, filepath=url)
+            content = Content(title=title.strip(), filepath=url.strip())
             content.save()
             content.tags = context['tags']
             contents.append(content)
