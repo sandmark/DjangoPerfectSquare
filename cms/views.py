@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render_to_response
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 
-from .models import Content, Tag
+from .models import Content, Tag, Check
 
 # Create your views here.
 @login_required
@@ -121,3 +121,16 @@ def tagging_set(request):
         content.save()
     messages.add_message(request, messages.INFO, '{}個のコンテンツを処理しました。'.format(len(contents)))
     return redirect('/')
+
+@login_required
+def check(request, content_id):
+    content = get_object_or_404(Content, pk=content_id)
+    checked = Check(user=request.user, content=content)
+    checked.save()
+    return redirect('cms:watch', content_id)
+
+@login_required
+def uncheck(request, content_id):
+    checked = get_object_or_404(Check, user=request.user, content=content_id)
+    checked.delete()
+    return redirect('cms:watch', content_id)

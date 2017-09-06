@@ -1,6 +1,7 @@
 from django.db import models
 from s3direct.fields import S3DirectField
 from django.contrib.sites.models import Site
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Tag(models.Model):
@@ -20,6 +21,12 @@ class Content(models.Model):
 
     def __str__(self):
         return self.title
+
+class Check(models.Model):
+    """視聴済みマーク"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.ForeignKey(Content, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
 
 # Receive the pre_delete signal and delete the file associated with the model instance.
 # !! S3Direct
