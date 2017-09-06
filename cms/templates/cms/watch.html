@@ -5,36 +5,50 @@
 {% block content %}
 <div class="card bg-light col-xs-8" >
   <div class="card-header">
-    {% user_checked user content as checked %}
-    {% if checked %}
-    {% format_date checked as date %}
-    <form method="POST"
-          style="display: inline;" action="{% url 'cms:uncheck' content.id %}" >
-      {% csrf_token %}
-      <button class="btn btn-sm fa fa-check-circle" type="submit"
-              data-toggle="tooltip" data-placement="left"
-              title="{{date}}に視聴しました">
-      </button>
-    </form>
-    {% else %}
-    <form method="POST" style="display: inline;" action="{% url 'cms:check' content.id %}" >
-      {% csrf_token %}
-      <button class="btn btn-sm fa fa-circle" type="submit"
-              data-toggle="tooltip" data-placement="left" title="クリックで視聴済み">
-      </button>
-    </form>
-    {% endif %}
-
-    {{content.title}}
+    <ul class="nav nav-tabs card-header-tabs" >
+      {% block navlink %}
+      <li class="nav-item">
+        <a class="nav-link active">HTML5</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'cms:watch_flash' content.id %}">Flash</a>
+      </li>
+      {% endblock %}
+    </ul>
   </div>
   <div class="card-body" >
+    <h5>
+      {% user_checked user content as checked %}
+      {% if checked %}
+      {% format_date checked as date %}
+      <form method="POST"
+            style="display: inline;" action="{% url 'cms:uncheck' content.id %}" >
+        {% csrf_token %}
+        <button class="btn btn-sm fa fa-check-circle" type="submit"
+                data-toggle="tooltip" data-placement="left"
+                title="{{date}}に視聴しました">
+        </button>
+      </form>
+      {% else %}
+      <form method="POST" style="display: inline;" action="{% url 'cms:check' content.id %}" >
+        {% csrf_token %}
+        <button class="btn btn-sm fa fa-circle" type="submit"
+                data-toggle="tooltip" data-placement="left" title="クリックで視聴済み">
+        </button>
+      </form>
+      {% endif %}
+
+      {{content.title}}
+    </h5>
     <h6 class="card-title" >
       {% for tag in content.tags.all %}
       <span class="badge badge-secondary" >{{tag.name}}</span>
       {% endfor %}
     </h6>
     <div class="embed-responsive embed-responsive-16by9">
+      {% block player %}
       <video src="{{content.filepath}}" type="video/mp4" controls preload></video>
+      {% endblock %}
     </div> <!-- END: embed-responsive embed-responsive-16by9 -->
   </div>
 </div>
