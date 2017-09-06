@@ -1,8 +1,17 @@
 {% load is_playable %}
+{% load check_tag %}
 <table class="table table-striped">
   <tbody>
     {% for content in contents.object_list %}
+    {% user_checked request.user content as checked %}
     <tr>
+      <td style="width: 1em;" >
+        {% if checked %}
+        {% format_date checked as date %}
+        <i class="fa fa-check-circle" data-toggle="tooltip" data-placement="left"
+           title="{{date}}に視聴しました" ></i>
+        {% endif %}
+      </td>
       <td>
         {% is_playable content as playable %}
         {% if playable %}

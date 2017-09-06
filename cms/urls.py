@@ -9,4 +9,6 @@ urlpatterns = [
     url(r'^tagging/form/$', views.tagging_form, name='tagging'),
     url(r'^tagging/search/$', views.tagging_search, name='tag_search'),
     url(r'^tagging/set/$', views.tagging_set, name='tag_set'),
+    url(r'^contents/(?P<content_id>\d+)/check/$', views.check, name='check'),
+    url(r'^contents/(?P<content_id>\d+)/uncheck/$', views.uncheck, name='uncheck'),
 ]
