@@ -15,7 +15,7 @@
       {% if checked %}
       {% format_date checked as date %}
       <form method="POST"
-            style="display: inline;" action="{% url 'cms:uncheck' content.id %}" >
+            style="display: inline;" action="{% url 'cms:uncheck' content.id %}?next={{ request.path }}" >
         {% csrf_token %}
         <button class="btn btn-sm fa fa-check-circle" type="submit"
                 data-toggle="tooltip" data-placement="left"
@@ -23,7 +23,7 @@
         </button>
       </form>
       {% else %}
-      <form method="POST" style="display: inline;" action="{% url 'cms:check' content.id %}" >
+      <form method="POST" style="display: inline;" action="{% url 'cms:check' content.id %}?next={{ request.path }}" >
         {% csrf_token %}
         <button class="btn btn-sm fa fa-circle" type="submit"
                 data-toggle="tooltip" data-placement="left" title="クリックで視聴済み">
