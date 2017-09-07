@@ -134,10 +134,16 @@ def check(request, content_id):
     content = get_object_or_404(Content, pk=content_id)
     checked = Check(user=request.user, content=content)
     checked.save()
-    return redirect('cms:watch', content_id)
+    return redirect_to_next(request, 'cms:watch', content_id)
 
 @login_required
 def uncheck(request, content_id):
     checked = get_object_or_404(Check, user=request.user, content=content_id)
     checked.delete()
-    return redirect('cms:watch', content_id)
+    return redirect_to_next(request, 'cms:watch', content_id)
+
+def redirect_to_next(request, default, *args):
+    if 'next' in request.GET:
+        return redirect(request.GET['next'], *args)
+    else:
+        return redirect(default, *args)
