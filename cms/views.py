@@ -77,12 +77,15 @@ def register_from_file(request):
 def parse_text_contents(context):
     title = ''
     contents = []
+    tags = Tag.objects.filter(pk__in=context['tags'])
+    tags = list(tags)
     for line in context['text_contents'].split('\n'):
+        line = line.strip()
         if title:
             url = 'https://s3-ap-northeast-1.amazonaws.com/private-square/{}'.format(line)
-            content = Content(title=title.strip(), filepath=url.strip())
+            content = Content(title=title, filepath=url)
             content.save()
-            content.tags = context['tags']
+            content.tags.add(*tags)
             contents.append(content)
             title = ''
         else:
