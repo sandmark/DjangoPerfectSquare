@@ -182,7 +182,7 @@ PAGINATION_SETTINGS = {
 }
 
 # Error Report
-ADMINS = (('sandmark', 'sandmark.m@gmail.com'))
+ADMINS = (('sandmark', 'sandmark.m@gmail.com'),)
 MANAGERS = ADMINSEMAIL_HOST = 'perfect-square'
 SEND_BROKEN_LINK_EMAILS=True
 SERVER_EMAIL = 'webmaster@perfect-square.herokuapp.com'
