@@ -1,5 +1,6 @@
 {% extends 'cms/watch.html' %}
 {% load static %}
+{% load watch %}
 
 {% block navlink %}
 <li class="nav-item">
@@ -7,6 +8,9 @@
 </li>
 <li class="nav-item">
   <a class="nav-link active">Flash</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'cms:watch_jw' content.id %}" >JW Player</a>
 </li>
 {% endblock %}
 
@@ -23,7 +27,7 @@
   <param name="swlivevonnect" value="true" />
   <param name="cachebusting" value="false">
   <param name="flashvars"
-         value="skin={% static 'cms/f4default.swf' %}&video={{content.filepath}}"/>
+         value="skin={% static 'cms/f4default.swf' %}&video={{content.filepath|quote_filepath}}"/>
   <a href="http://www.adobe.com/go/flashplayer/">Download it from Adobe.</a>
   <a href="http://gokercebeci.com/dev/f4player" title="flv player">flv player</a>
 </object>

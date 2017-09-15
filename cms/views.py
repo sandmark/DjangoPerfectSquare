@@ -32,6 +32,10 @@ def watch(request, content_id):
 def watch_flash(request, content_id):
     return render_content(content_id, 'cms/watch_flash.html', request)
 
+@login_required
+def watch_jw(request, content_id):
+    return render_content(content_id, 'cms/watch_jw.html', request)
+
 def render_content(content_id, template, request):
     content = get_object_or_404(Content, pk=content_id)
     context = {'content': content}
