@@ -1,5 +1,6 @@
 {% extends 'cms/watch.html' %}
 {% load static %}
+{% load watch %}
 
 {% block navlink %}
 <li class="nav-item">
@@ -28,7 +29,7 @@
    "flashplayer": "{% static 'cms/flash.swf' %}",
    "width": "640",
    "height": "360",
-   "file": "{{content.filepath}}"
+   "file": "{{content.filepath|quote_filepath}}"
  });
 </script>
 </div>

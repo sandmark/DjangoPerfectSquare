@@ -1,4 +1,5 @@
 {% extends 'cms/watch.html' %}
+{% load watch %}
 
 {% block navlink %}
 <li class="nav-item" >
@@ -13,5 +14,5 @@
 {% endblock %}
 
 {% block player %}
-<video src="{{content.filepath}}" type="video/mp4" controls preload></video>
+<video src="{{content.filepath|quote_filepath}}" type="video/mp4" controls preload></video>
 {% endblock %}
