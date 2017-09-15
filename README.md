@@ -1,5 +1,9 @@
 # CHANGELOG
 
+# 0.8
+JWplayerを追加。
+URLのエンコード処理を追加。
+
 ## 0.7
 Flash版プレイヤーを追加。
 
