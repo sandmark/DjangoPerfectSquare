@@ -38,9 +38,11 @@
       <span class="badge badge-secondary" >{{tag.name}}</span>
       {% endfor %}
     </h6>
+    {% block jwplayer %}
     <div class="embed-responsive embed-responsive-16by9">
       {% block player %}{% endblock %}
     </div> <!-- END: embed-responsive embed-responsive-16by9 -->
+    {% endblock %}
   </div>
 </div>
 
