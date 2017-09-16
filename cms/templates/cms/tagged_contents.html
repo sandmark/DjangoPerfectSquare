@@ -1,4 +1,7 @@
 {% extends 'layout.html' %}
+
+{% block title %}{{tag.name}} - PerfectSquare{% endblock %}
+
 {% block content %}
 <h3>タグ '{{ tag.name }}' に該当するコンテンツ</h3>
 {% include 'cms/_contents.html' %}
