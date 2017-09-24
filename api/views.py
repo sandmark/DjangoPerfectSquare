@@ -4,21 +4,22 @@ api/views.py
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from cms.models import Content
 from api.serializers import ContentSerializer
 
 
-@api_view(['GET', 'POST'])
-def content_list(request, format=None):
+class ContentList(APIView):
     """
     List all contents, or create a new content.
     """
-    if request.method == 'GET':
+
+    def get(self, request, format=None):
         contents = Content.objects.all()
         serializer = ContentSerializer(contents, many=True)
         return Response(serializer.data)
 
-    elif request.method == 'POST':
+    def post(self, request, format=None):
         serializer = ContentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()

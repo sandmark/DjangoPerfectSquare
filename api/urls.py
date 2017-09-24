@@ -6,7 +6,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from api import views
 
 urlpatterns = [
-    url(r'^contents/$', views.content_list),
+    url(r'^contents/$', views.ContentList.as_view()),
     url(r'^contents/(?P<pk>\d+)/$', views.content_detail),
 ]
 
