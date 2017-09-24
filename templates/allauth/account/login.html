@@ -7,6 +7,7 @@
   {% csrf_token %}
   {% if redirect_field_value %}
   <input type="hidden" name="{{redirect_field_value}}" value="{{redirect_field_value}}">
+  <input type="hidden" name="next" value="{{request.GET.next}}">
   {% endif %}
   <div class="form-group">
     <label for="id_login" class="sr-only">ユーザー名</label>
