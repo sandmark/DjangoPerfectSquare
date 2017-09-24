@@ -23,6 +23,17 @@ class TagList(generics.ListCreateAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 
+    def get_queryset(self):
+        """
+        `tagname`クエリパラメータがURLに含まれている場合
+        クエリ結果をフィルタリングして返す
+        """
+        queryset = Tag.objects.all()
+        tagname = self.request.query_params.get('tagname', None)
+        if tagname is not None:
+            queryset = queryset.filter(name=tagname)
+        return queryset
+
 
 class TagDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAdminUser,)
