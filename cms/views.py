@@ -17,7 +17,7 @@ def index(request):
     """
     Contentをすべて取得し、ページネーションして描画する。
     """
-    all_contents = Content.objects.all().order_by('created')
+    all_contents = Content.objects.all().order_by('-created')
 
     try:
         page = request.GET.get('page', 1)
