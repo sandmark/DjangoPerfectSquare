@@ -7,7 +7,7 @@ from api import views
 
 urlpatterns = [
     url(r'^contents/$', views.ContentList.as_view()),
-    url(r'^contents/(?P<pk>\d+)/$', views.content_detail),
+    url(r'^contents/(?P<pk>\d+)/$', views.ContentDetail.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

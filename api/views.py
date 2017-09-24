@@ -1,8 +1,8 @@
 """
 api/views.py
 """
+from django.http import Http404
 from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from cms.models import Content
@@ -27,27 +27,31 @@ class ContentList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def content_detail(request, pk, format=None):
+class ContentDetail(APIView):
     """
     Retrieve, update or delete a content.
     """
-    try:
-        content = Content.objects.get(pk=pk)
-    except Content.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'GET':
+    def get_object(self, pk):
+        try:
+            return Content.objects.get(pk=pk)
+        except Content.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        content = self.get_object(pk)
         serializer = ContentSerializer(content)
         return Response(serializer.data)
 
-    elif request.method == 'PUT':
+    def put(self, request, pk, format=None):
+        content = self.get_object(pk)
         serializer = ContentSerializer(content, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == 'DELETE':
+    def delete(self, request, pk, format=None):
+        content = self.get_object(pk)
         content.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
