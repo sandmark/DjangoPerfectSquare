@@ -4,23 +4,28 @@ from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 
 # Create your models here.
+
+
 class Tag(models.Model):
     """タグ"""
-    name  = models.CharField('名前', max_length=255, unique=True)
+    name = models.CharField('名前', max_length=255, unique=True, blank=False)
     sites = models.ManyToManyField(Site)
 
     def __str__(self):
         return self.name
 
+
 class Content(models.Model):
     """コンテンツ"""
-    title    = models.CharField('タイトル', max_length=255)
-    filepath = S3DirectField(dest='square')
-    tags     = models.ManyToManyField(Tag)
-    sites    = models.ManyToManyField(Site)
+    title = models.CharField('タイトル', max_length=255, blank=False)
+    filepath = S3DirectField(dest='square', unique=True)
+    created = models.DateTimeField(auto_now_add=True)
+    tags = models.ManyToManyField(Tag)
+    sites = models.ManyToManyField(Site)
 
     def __str__(self):
         return self.title
+
 
 class Check(models.Model):
     """視聴済みマーク"""
