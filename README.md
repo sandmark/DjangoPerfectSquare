@@ -1,5 +1,8 @@
 # CHANGELOG
 
+# 0.9
+Restful APIを実装。
+
 # 0.8
 JWplayerを追加。
 URLのエンコード処理を追加。
