@@ -9,7 +9,7 @@ from api.serializers import ContentSerializer
 
 
 @api_view(['GET', 'POST'])
-def content_list(request):
+def content_list(request, format=None):
     """
     List all contents, or create a new content.
     """
@@ -27,7 +27,7 @@ def content_list(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def content_detail(request, pk):
+def content_detail(request, pk, format=None):
     """
     Retrieve, update or delete a content.
     """
