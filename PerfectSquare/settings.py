@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'invitations',
     's3direct',
     'pure_pagination',
+    'rest_framework',
     'gunicorn',
     'cms'
 ]
@@ -70,7 +71,7 @@ TEMPLATES = [
         'DIRS': [
             os.path.join(BASE_DIR, 'templates'),
             os.path.join(BASE_DIR, 'templates', 'allauth'),
-                     ],
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -155,11 +156,11 @@ S3DIRECT_DESTINATIONS = {
 SITE_ID = 1
 
 # Email
-EMAIL_HOST_USER     = os.environ['SENDGRID_USERNAME']
+EMAIL_HOST_USER = os.environ['SENDGRID_USERNAME']
 EMAIL_HOST_PASSWORD = os.environ['SENDGRID_PASSWORD']
-EMAIL_HOST          = 'smtp.sendgrid.net'
-EMAIL_PORT          = 587
-EMAIL_USE_TLS       = True
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 # All Auth
 AUTHENTICATIONS_BACKENDS = (
@@ -184,7 +185,7 @@ PAGINATION_SETTINGS = {
 # Error Report
 ADMINS = (('sandmark', 'sandmark.m@gmail.com'),)
 MANAGERS = ADMINSEMAIL_HOST = 'perfect-square'
-SEND_BROKEN_LINK_EMAILS=True
+SEND_BROKEN_LINK_EMAILS = True
 SERVER_EMAIL = 'webmaster@perfect-square.herokuapp.com'
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
@@ -193,3 +194,12 @@ SERVER_EMAIL = 'webmaster@perfect-square.herokuapp.com'
 # EMAIL_HOST_PASSWORD = 'password'
 # EMAIL_USE_TLS = True
 # EMAIL_HOST = 'smtp.gmail.com'
+
+# Rest Framework
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
