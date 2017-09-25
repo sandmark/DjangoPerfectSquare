@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'pure_pagination',
     'rest_framework',
     'gunicorn',
-    'cms'
+    'cms',
+    'api',
 ]
 
 MIDDLEWARE = [
