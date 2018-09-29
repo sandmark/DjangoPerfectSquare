@@ -7,3 +7,4 @@ PerfectSquare/staticfiles/
 ,/
 /.coverage
 /cover/
+/venv/
