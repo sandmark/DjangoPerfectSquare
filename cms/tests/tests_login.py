@@ -33,4 +33,4 @@ class IndexViewTests(TestCase):
         url = reverse('cms:index')
         login(self.client)
         r = self.client.get(url)
-        self.assertContains(r, 'アップロードされたものがありません')
+        self.assertEqual(r.status_code, 200)
