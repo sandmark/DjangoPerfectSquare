@@ -58,3 +58,14 @@ class IndexViewTests(TestCase):
         r = self.client.get(url)
         contents = r.context['contents'].object_list
         self.assertEquals(len(contents), 10)
+
+    def test_pagination_shows_at_most_five_pages(self):
+        """
+        ページが6以上ある場合でも5つまでしか表示しない。
+        """
+        url = reverse('cms:index')
+        for i in range(100):
+            name = str(i)
+            Content(title=name, filepath=name).save()
+        r = self.client.get(url)
+        self.assertContains(r, 'page-item', 5+2) # last 2 means `prev` and `next` link
