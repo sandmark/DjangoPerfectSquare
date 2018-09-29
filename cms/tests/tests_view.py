@@ -46,3 +46,15 @@ class IndexViewTests(TestCase):
         contents = r.context['contents'].object_list
         for i, content in enumerate(reversed(contents)):
             self.assertEquals(content.title, str(i))
+
+    def test_contents_paginated_by_ten(self):
+        """
+        Contentは10個ずつページネーションされる。
+        """
+        url = reverse('cms:index')
+        for i in range(20):
+            name = str(i)
+            Content(title=name, filepath=name).save()
+        r = self.client.get(url)
+        contents = r.context['contents'].object_list
+        self.assertEquals(len(contents), 10)
