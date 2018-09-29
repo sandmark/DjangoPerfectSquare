@@ -33,3 +33,16 @@ class IndexViewTests(TestCase):
         location = '{}?page=something'.format(url)
         r = self.client.get(location)
         self.assertEqual(r.status_code, 200)
+
+    def test_contents_sorted_by_created(self):
+        """
+        Contentは最近作られたものから表示される。
+        """
+        url = reverse('cms:index')
+        for i in range(10):
+            c = Content(title=str(i), filepath=i)
+            c.save()
+        r = self.client.get(url)
+        contents = r.context['contents'].object_list
+        for i, content in enumerate(reversed(contents)):
+            self.assertEquals(content.title, str(i))
