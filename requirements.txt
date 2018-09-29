@@ -38,3 +38,4 @@ six==1.10.0
 urllib3==1.22
 virtualenv==15.1.0
 whitenoise==3.3.0
+coverage==4.5.1
