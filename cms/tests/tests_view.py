@@ -24,3 +24,12 @@ class IndexViewTests(TestCase):
         r = self.client.get(reverse('cms:index'))
         self.assertEqual(count, 0)
         self.assertContains(r, 'アップロードされたものがありません')
+
+    def test_page_not_an_integer(self):
+        """
+        ?page=a などでアクセスされてもエラーを吐かない。
+        """
+        url = reverse('cms:index')
+        location = '{}?page=something'.format(url)
+        r = self.client.get(location)
+        self.assertEqual(r.status_code, 200)

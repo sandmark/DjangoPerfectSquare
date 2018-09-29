@@ -18,14 +18,14 @@ def index(request):
     Contentをすべて取得し、ページネーションして描画する。
     """
     all_contents = Content.objects.all().order_by('-created')
+    page = request.GET.get('page', 1)
+    p = Paginator(all_contents, 10, request=request)
 
     try:
-        page = request.GET.get('page', 1)
+        contents = p.page(page)
     except PageNotAnInteger:
-        page = 1
+        contents = p.page(1)
 
-    p = Paginator(all_contents, 10, request=request)
-    contents = p.page(page)
     context = {'contents': contents}
     return render(request, 'cms/index.html', context)
 
