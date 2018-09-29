@@ -26,10 +26,7 @@ def index(request):
 
     p = Paginator(all_contents, 10, request=request)
     contents = p.page(page)
-    context = {
-        'contents': contents,
-        'no_contents': not bool(contents)
-    }
+    context = {'contents': contents}
     return render(request, 'cms/index.html', context)
 
 
