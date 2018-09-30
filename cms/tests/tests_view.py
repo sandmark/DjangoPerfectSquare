@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
 
-from ..models import Content
+from ..models import Content, Tag
 
 def login(client):
     """
@@ -73,52 +73,36 @@ class WatchViewTests(TestCase):
         r = self.client.get(url)
         self.assertContains(r, 'shockwave-flash')
 
-class IndexViewTests(TestCase):
-    def setUp(self):
-        """
-        ログインする。
-        """
-        login(self.client)
+class MixinIndexTag():
+    """
+    MixIn class to test `index` and `tagged_contents` views.
+    """
+    @property
+    def url(self):
+        raise NotImplementedError
 
-    def test_no_contents(self):
-        """
-        Contentが一つもない場合、アラートが表示される。
-        """
-        count = Content.objects.count()
-        r = self.client.get(reverse('cms:index'))
-        self.assertEqual(count, 0)
-        self.assertContains(r, 'アップロードされたものがありません')
+    @property
+    def params(self):
+        raise NotImplementedError
+
+    @property
+    def make_contents(self, count):
+        raise NotImplementedError
 
     def test_page_not_an_integer(self):
         """
         ?page=a などでアクセスされてもエラーを吐かない。
         """
-        url = reverse('cms:index')
-        location = '{}?page=something'.format(url)
-        r = self.client.get(location)
+        url = reverse(self.url, kwargs=self.params)
+        r = self.client.get(url, {'page': 'something'})
         self.assertEqual(r.status_code, 200)
-
-    def test_contents_sorted_by_created(self):
-        """
-        Contentは最近作られたものから表示される。
-        """
-        url = reverse('cms:index')
-        for i in range(10):
-            c = Content(title=str(i), filepath=i)
-            c.save()
-        r = self.client.get(url)
-        contents = r.context['contents'].object_list
-        for i, content in enumerate(reversed(contents)):
-            self.assertEquals(content.title, str(i))
 
     def test_contents_paginated_by_ten(self):
         """
         Contentは10個ずつページネーションされる。
         """
-        url = reverse('cms:index')
-        for i in range(20):
-            name = str(i)
-            Content(title=name, filepath=name).save()
+        url = reverse(self.url, kwargs=self.params)
+        self.make_contents(20)
         r = self.client.get(url)
         contents = r.context['contents'].object_list
         self.assertEquals(len(contents), 10)
@@ -127,9 +111,59 @@ class IndexViewTests(TestCase):
         """
         ページが6以上ある場合でも5つまでしか表示しない。
         """
-        url = reverse('cms:index')
-        for i in range(100):
-            name = str(i)
-            Content(title=name, filepath=name).save()
+        url = reverse(self.url, kwargs=self.params)
+        self.make_contents(100)
         r = self.client.get(url)
         self.assertContains(r, 'page-item', 5+2) # last 2 means `prev` and `next` link
+
+class IndexViewTest(MixinIndexTag, TestCase):
+    def setUp(self):
+        login(self.client)
+
+    def make_contents(self, count):
+        for i in range(count):
+            name = str(i)
+            Content(title=name, filepath=name).save()
+
+    url = 'cms:index'
+    params = {}
+    make_contents = make_contents
+
+    def test_no_contents(self):
+        """
+        Contentが一つもない場合、アラートが表示される。
+        """
+        count = Content.objects.count()
+        r = self.client.get(reverse(self.url, kwargs=self.params))
+        self.assertEqual(count, 0)
+        self.assertContains(r, 'アップロードされたものがありません')
+
+    def test_contents_sorted_by_created(self):
+        """
+        Contentは最近作られたものから表示される。
+        """
+        url = reverse(self.url, kwargs=self.params)
+        for i in range(10):
+            Content(title=str(i), filepath=i).save()
+        r = self.client.get(url)
+        contents = r.context['contents'].object_list
+        for i, content in enumerate(reversed(contents)):
+            self.assertEquals(content.title, str(i))
+
+class TaggedViewTest(MixinIndexTag, TestCase):
+    def make_contents(self, count):
+        t = Tag.objects.get(pk=1)
+        for i in range(count):
+            name = str(i)
+            c = Content(title=name, filepath=name)
+            c.save()
+            c.tags.add(t)
+
+    url = 'cms:tagged_contents'
+    params = {'tag_id': 1}
+    make_contents = make_contents
+
+    def setUp(self):
+        login(self.client)
+        t = Tag(name='testTag')
+        t.save()
