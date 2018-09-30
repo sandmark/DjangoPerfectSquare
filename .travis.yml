@@ -1,0 +1,15 @@
+language: python
+python:
+  - '3.6'
+deploy:
+  provider: heroku
+  api_key:
+    secure: JAMUQjpJva7AjrRRO5RI5p4phbyosR57E72bQLL70JG6rxveectTrXg/UiB+OgDGmeQy9gUjpHnTHxoVQ+mYlGIuqeZguyc13bGAbd2xm5Tx5Y3QAtxYuOzh3NVjQhsYpo76MfHlpO3If2Wa5Z2cTq7z8H8+hNgKVK1DjJqPO5IlUOkznsZhib/ni+TE8em7PfqOL6yBToD/aYIq/zVSnd9LkBZ9n1f/HDNDLxyaXO1Q6puB3giyewYtuOj3ns4fMke8GzINosdiZvIFOahh02YkF0yBneSUynBlgybumyMRGOxvWYGS8DF2WbOcoj7D5IrJeZh1AFkxVs13UgrETgdEiaWYlA52ymg+u7Sm7ehOuirnLxgNEIlCEuRw3OvyGuqL47IVyXIUkZHHC4vvt8Z+3v7I068egP8jITm0OZ5VhfXF382HGhYSk86oRy/uK2LwFEi6EYpikDnUy9OKaLR6CBwngjOuCMaYhTmxozgCVKtqUQ9n8eCZ0iCE0LmbaHjF0fiKUbOt6ks3U7H/tRZxPNOKqofJ/qQW0rJZMUsiC1Cgx1yiSLpP7LqDbZ9wq0vxJuCYcBKvQa0iZOubz77rrbfXPfwpidf0WjVB6c+8GmacauGHu+cqmtjbtBGW38Ftd3aXHSiV3NgHN+4E2ArutWlAP/0XaLm97UB/e+Q=
+  strategy: git
+  app: PerfectSquare
+  on:
+    repo: sandmark/DjangoPerfectSquare
+  run:
+    - "python manage.py collectstatic --noinput --settings=settings.heroku"
+    - "python manage.py migrate --settings=settings.heroku"
+script: "coverage run --source=. manage.py test"
