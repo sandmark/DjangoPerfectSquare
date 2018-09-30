@@ -1,3 +1,6 @@
+# PerfectSquare
+[![Build Status](https://travis-ci.org/sandmark/DjangoPerfectSquare.svg?branch=master)](https://travis-ci.org/sandmark/DjangoPerfectSquare)
+
 # CHANGELOG
 
 ## 0.9
