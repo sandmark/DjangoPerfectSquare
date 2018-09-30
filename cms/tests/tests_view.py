@@ -20,58 +20,69 @@ def create_content(title='test', filepath='http://example.com/something.mp4'):
     c.save()
     return c
 
-class WatchViewTests(TestCase):
-    def setUp(self):
-        login(self.client)
+class MixinWatch():
+    @property
+    def url_name(self):
+        raise NotImplementedError
+
+    @property
+    def url(self):
+        raise NotImplementedError
+
+    @property
+    def contains(self):
+        raise NotImplementedError
 
     def test_watch_views_404_if_id_not_found(self):
         """
-        cms:watch, cms:watch_flash, cms:watch_jwに存在しないContentが
-        指定された場合、404エラーを返す。
+        存在しないContentが指定された場合、404エラーを返す。
         """
         count = Content.objects.count()
         self.assertEqual(count, 0)
-
-        for url in ['cms:watch', 'cms:watch_flash', 'cms:watch_jw']:
-            url = reverse(url, kwargs={'content_id': 1})
-            r = self.client.get(url)
-            self.assertEqual(r.status_code, 404)
+        url = reverse(self.url_name, kwargs={'content_id': 1})
+        r = self.client.get(url)
+        self.assertEqual(r.status_code, 404)
 
     def test_watch_views_404_if_invalid_id(self):
         """
-        cms:watch, cms:watch_flash, cms:watch_jwに
         無効なcontent_idが指定された場合、404エラーを返す。
         """
-        for url in ['/watch/{}', '/watch/{}/flash', '/watch/{}/jw']:
-            r = self.client.get(url.format('string'))
-            self.assertEqual(r.status_code, 404)
+        r = self.client.get(self.url.format('something'))
+        self.assertEqual(r.status_code, 404)
 
-    def test_watch_renders_html5_if_mp4(self):
+    def test_watch_renders_player_if_mp4(self):
         """
         cms:watchはhtml5プレイヤーを表示する。
         """
         c = create_content()
-        url = reverse('cms:watch', kwargs={'content_id': c.id})
+        url = reverse(self.url_name, kwargs={'content_id': c.id})
         r = self.client.get(url)
-        self.assertContains(r, '<video')
+        self.assertContains(r, self.contains)
 
-    def test_watch_jw_renders_jwplayer_if_mp4(self):
-        """
-        cms:jwはjwplayerを表示する。
-        """
-        c = create_content()
-        url = reverse('cms:watch_jw', kwargs={'content_id': c.id})
-        r = self.client.get(url)
-        self.assertContains(r, 'jwplayer')
+class WatchViewTest(MixinWatch, TestCase):
+    def setUp(self):
+        login(self.client)
 
-    def test_watch_flash_renders_flash_if_mp4(self):
-        """
-        cms:flashはFlashプレイヤーを表示する。
-        """
-        c = create_content()
-        url = reverse('cms:watch_flash', kwargs={'content_id': c.id})
-        r = self.client.get(url)
-        self.assertContains(r, 'shockwave-flash')
+    url_name = 'cms:watch'
+    url = 'cms/watch/{}'
+    contains = '<video'
+
+class WatchJwViewTest(MixinWatch, TestCase):
+    def setUp(self):
+        login(self.client)
+
+    url_name = 'cms:watch_jw'
+    url = 'cms/watch/{}/jw'
+    contains = 'jwplayer'
+
+class WatchFlashViewTest(MixinWatch, TestCase):
+    def setUp(self):
+        login(self.client)
+
+    url_name = 'cms:watch_flash'
+    url = 'cms/watch/{}/flash'
+    contains = 'shockwave-flash'
+
 
 class MixinIndexTag():
     """
