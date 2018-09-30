@@ -67,13 +67,14 @@ def tagged_contents(request, tag_id):
     tag = get_object_or_404(Tag, pk=tag_id)
     all_contents = Content.objects.filter(tags__id__exact=tag.id).order_by('title')
 
-    try:
-        page = request.GET.get('page', 1)
-    except PageNotAnInteger:
-        page = 1
+    page = request.GET.get('page', 1)
 
     p = Paginator(all_contents, 10, request=request)
-    contents = p.page(page)
+
+    try:
+        contents = p.page(page)
+    except PageNotAnInteger:
+        contents = p.page(1)
 
     context = {'contents': contents, 'tag': tag}
     return render(request, 'cms/tagged_contents.html', context)
