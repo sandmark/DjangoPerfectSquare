@@ -6,6 +6,5 @@ register = template.Library()
 
 @register.filter
 def quote_filepath(url):
-    print(url)
     _, scheme, path = re.split(r'(https?://)', url)
     return '{}{}'.format(scheme, urlquote(path))

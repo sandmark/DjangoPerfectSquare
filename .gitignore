@@ -5,3 +5,6 @@ PerfectSquare/__pycache__/
 PerfectSquare/staticfiles/
 **/__pycache__/
 ,/
+/.coverage
+/cover/
+/venv/
