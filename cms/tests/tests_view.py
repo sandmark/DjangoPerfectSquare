@@ -52,6 +52,16 @@ class CheckTest(MixinCheck, TestCase):
     urlname = 'cms:check'
     create_content = create_content
 
+    def test_check_creation(self):
+        """
+        対象ContentとUserの間にCheckオブジェクトが生成される。
+        """
+        c = self.create_content()
+        url = reverse(self.urlname, kwargs={'content_id': c.id})
+        self.client.get(url)
+        count = Check.objects.count()
+        self.assertEqual(count, 1)
+
 class UncheckTest(MixinCheck, TestCase):
     def setUp(self):
         login(self.client)
@@ -70,6 +80,17 @@ class UncheckTest(MixinCheck, TestCase):
 
     urlname = 'cms:uncheck'
     create_content = create_content
+
+    def test_check_deletion(self):
+        """
+        対象ContentとUserの間からCheckオブジェクトが削除される。
+        """
+        c = create_content()
+        url = reverse(self.urlname, kwargs={'content_id': c.id})
+        user = User.objects.first()
+        Check(user=user, content=c).save()
+        self.client.get(url)
+        self.assertEqual(Check.objects.count(), 0)
 
 class MixinWatch():
     @property
