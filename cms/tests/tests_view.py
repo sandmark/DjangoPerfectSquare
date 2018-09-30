@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
 
-from ..models import Content, Tag
+from ..models import Content, Tag, Check
 
 def login(client):
     """
@@ -19,6 +19,72 @@ def create_content(title='test', filepath='http://example.com/something.mp4'):
     c = Content(title=title, filepath=filepath)
     c.save()
     return c
+
+class MixinCheck():
+    @property
+    def urlname(self):
+        raise NotImplementedError
+
+    @property
+    def create_content(self):
+        raise NotImplementedError
+
+    def test_check_404_content_not_found(self):
+        """
+        指定されたContentが存在しない場合404エラーを返す。
+        """
+        url = reverse(self.urlname, kwargs={'content_id': 404})
+        r = self.client.get(url)
+        self.assertEqual(r.status_code, 404)
+
+    def test_check_redirect_to_next(self):
+        """
+        ?nextパラメータが指定されている場合、そちらにリダイレクトする。
+        """
+        c = self.create_content()
+        url = reverse(self.urlname, kwargs={'content_id': c.id})
+        r = self.client.get(url, {'next': '/'})
+        self.assertRedirects(r, '/')
+
+    def test_check_redirect_to_default(self):
+        """
+        ?nextパラメータが指定されなかった場合、
+        デフォルトで cms:watch へリダイレクトする。
+        """
+        c = self.create_content()
+        url = reverse(self.urlname, kwargs={'content_id': c.id})
+        redirected = reverse('cms:watch', kwargs={'content_id': c.id})
+        r = self.client.get(url)
+        self.assertRedirects(r, redirected)
+
+class CheckTest(MixinCheck, TestCase):
+    def setUp(self):
+        login(self.client)
+
+    def create_content(self):
+        return create_content()
+
+    urlname = 'cms:check'
+    create_content = create_content
+
+class UncheckTest(MixinCheck, TestCase):
+    def setUp(self):
+        login(self.client)
+
+    def create_content(self):
+        """
+        Checkオブジェクトを保存しておかないと
+        get_object_or_404のタイミングで404となってしまうため、
+        テスト用Contentを作るときに関連付けておく。
+        """
+        c = create_content()
+        u = User.objects.first()
+        ch = Check(user=u, content=c)
+        ch.save()
+        return c
+
+    urlname = 'cms:uncheck'
+    create_content = create_content
 
 class MixinWatch():
     @property
