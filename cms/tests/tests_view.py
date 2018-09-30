@@ -41,6 +41,16 @@ class WatchViewTests(TestCase):
             r = self.client.get(url.format('string'))
             self.assertEqual(r.status_code, 404)
 
+    def test_watch_renders_html5_if_mp4(self):
+        """
+        cms:watchはhtml5プレイヤーを表示する。
+        """
+        c = Content(title='test', filepath='http://example.com/something.mp4')
+        c.save()
+        url = reverse('cms:watch', kwargs={'content_id': c.id})
+        r = self.client.get(url)
+        self.assertContains(r, '<video')
+
 class IndexViewTests(TestCase):
     def setUp(self):
         """
