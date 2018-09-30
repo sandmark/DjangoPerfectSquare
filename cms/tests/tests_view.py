@@ -175,3 +175,14 @@ class TaggedViewTest(MixinIndexTag, TestCase):
         url = reverse(self.url, kwargs={'tag_id': 404})
         r = self.client.get(url)
         self.assertEqual(r.status_code, 404)
+
+    def test_contents_sorted_by_title(self):
+        """
+        ContentはTitleでソートされて表示される。
+        """
+        self.make_contents(10)
+        url = reverse(self.url, kwargs=self.params)
+        r = self.client.get(url)
+        contents = r.context['contents'].object_list
+        for i, content in enumerate(contents):
+            self.assertEqual(str(i), content.title)
