@@ -15,6 +15,11 @@ def login(client):
     u.save()
     return client.login(username=username, password=password)
 
+def create_content(title='test', filepath='http://example.com/something.mp4'):
+    c = Content(title=title, filepath=filepath)
+    c.save()
+    return c
+
 class WatchViewTests(TestCase):
     def setUp(self):
         login(self.client)
@@ -45,11 +50,28 @@ class WatchViewTests(TestCase):
         """
         cms:watchはhtml5プレイヤーを表示する。
         """
-        c = Content(title='test', filepath='http://example.com/something.mp4')
-        c.save()
+        c = create_content()
         url = reverse('cms:watch', kwargs={'content_id': c.id})
         r = self.client.get(url)
         self.assertContains(r, '<video')
+
+    def test_watch_jw_renders_jwplayer_if_mp4(self):
+        """
+        cms:jwはjwplayerを表示する。
+        """
+        c = create_content()
+        url = reverse('cms:watch_jw', kwargs={'content_id': c.id})
+        r = self.client.get(url)
+        self.assertContains(r, 'jwplayer')
+
+    def test_watch_flash_renders_flash_if_mp4(self):
+        """
+        cms:flashはFlashプレイヤーを表示する。
+        """
+        c = create_content()
+        url = reverse('cms:watch_flash', kwargs={'content_id': c.id})
+        r = self.client.get(url)
+        self.assertContains(r, 'shockwave-flash')
 
 class IndexViewTests(TestCase):
     def setUp(self):
