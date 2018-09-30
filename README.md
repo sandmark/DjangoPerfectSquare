@@ -1,9 +1,19 @@
+# PerfectSquare
+[![Build Status](https://travis-ci.org/sandmark/DjangoPerfectSquare.svg?branch=master)](https://travis-ci.org/sandmark/DjangoPerfectSquare)
+
 # CHANGELOG
 
-# 0.9
+## 0.9.7
+- TravisCIを有効化
+- ページネーションでエラーが出るバグを修正
+- 不要な`print`文を削除
+- 使われていない機能を削除
+- 各種テストを追加
+
+## 0.9
 Restful APIを実装。
 
-# 0.8
+## 0.8
 JWplayerを追加。
 URLのエンコード処理を追加。
 
