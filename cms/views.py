@@ -22,7 +22,11 @@ def index(request):
     except PageNotAnInteger:
         contents = p.page(1)
 
-    context = {'contents': contents}
+    context = {
+        'contents': contents,
+        'empty': Content.objects.count() == 0
+    }
+
     return render(request, 'cms/index.html', context)
 
 

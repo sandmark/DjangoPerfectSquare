@@ -1,14 +1,14 @@
 {% extends 'layout.html' %}
 
-{% if contents %}
+{% block alert %}
+{% if empty %}
+<div class="alert alert-primary" role="alert" >
+  アップロードされたものがありません。
+</div>
+{% endif %}
+{% endblock alert %}
+
 {% block content %}
 {% include 'cms/_contents.html' %}
 {% endblock content %}
 
-{% else %}
-{% block alert %}
-<div class="alert alert-primary" role="alert" >
-  アップロードされたものがありません。
-</div>
-{% endblock alert %}
-{% endif %}

@@ -221,6 +221,15 @@ class IndexViewTest(MixinIndexTag, TestCase):
         self.assertEqual(count, 0)
         self.assertContains(r, 'アップロードされたものがありません')
 
+    def test_with_contents(self):
+        """
+        Contentが一つ以上ある場合、アラートは表示されない。
+        """
+        create_content()
+        self.assertEqual(Content.objects.count(), 1)
+        r = self.client.get(reverse(self.url, kwargs=self.params))
+        self.assertNotContains(r, 'アップロードされたものがありません')
+
     def test_contents_sorted_by_created(self):
         """
         Contentは最近作られたものから表示される。
