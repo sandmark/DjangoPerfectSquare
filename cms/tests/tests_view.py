@@ -32,6 +32,14 @@ class WatchViewTests(TestCase):
             r = self.client.get(url)
             self.assertEqual(r.status_code, 404)
 
+    def test_watch_views_404_if_invalid_id(self):
+        """
+        cms:watch, cms:watch_flash, cms:watch_jwに
+        無効なcontent_idが指定された場合、404エラーを返す。
+        """
+        for url in ['/watch/{}', '/watch/{}/flash', '/watch/{}/jw']:
+            r = self.client.get(url.format('string'))
+            self.assertEqual(r.status_code, 404)
 
 class IndexViewTests(TestCase):
     def setUp(self):
