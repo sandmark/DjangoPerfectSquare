@@ -4,17 +4,41 @@ from django.contrib.auth.models import User
 
 from ..models import Content
 
+def login(client):
+    """
+    Login as normal user (not admin or staff)
+    """
+    username = 'test@example.com'
+    password = 'test'
+    u = User(username=username)
+    u.set_password(password)
+    u.save()
+    return client.login(username=username, password=password)
+
+class WatchViewTests(TestCase):
+    def setUp(self):
+        login(self.client)
+
+    def test_watch_views_404_if_id_not_found(self):
+        """
+        cms:watch, cms:watch_flash, cms:watch_jwに存在しないContentが
+        指定された場合、404エラーを返す。
+        """
+        count = Content.objects.count()
+        self.assertEqual(count, 0)
+
+        for url in ['cms:watch', 'cms:watch_flash', 'cms:watch_jw']:
+            url = reverse(url, kwargs={'content_id': 1})
+            r = self.client.get(url)
+            self.assertEqual(r.status_code, 404)
+
+
 class IndexViewTests(TestCase):
     def setUp(self):
         """
         ログインする。
         """
-        username = 'test@example.com'
-        password = 'test'
-        u = User(username=username)
-        u.set_password(password)
-        u.save()
-        self.client.login(username=username, password=password)
+        login(self.client)
 
     def test_no_contents(self):
         """
