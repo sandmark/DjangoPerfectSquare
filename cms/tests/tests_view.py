@@ -167,3 +167,11 @@ class TaggedViewTest(MixinIndexTag, TestCase):
         login(self.client)
         t = Tag(name='testTag')
         t.save()
+
+    def test_404_for_tag_dont_exists(self):
+        """
+        存在しないTagを指定された場合404となる。
+        """
+        url = reverse(self.url, kwargs={'tag_id': 404})
+        r = self.client.get(url)
+        self.assertEqual(r.status_code, 404)
