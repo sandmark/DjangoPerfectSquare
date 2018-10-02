@@ -215,7 +215,7 @@ class MixinIndexTag():
         self.make_contents(20)
         r = self.client.get(url)
         contents = r.context['contents'].object_list
-        self.assertEquals(len(contents), 10)
+        self.assertEqual(len(contents), 10)
 
     def test_pagination_shows_at_most_three_pages(self):
         """
@@ -267,7 +267,7 @@ class IndexViewTest(MixinIndexTag, TestCase):
         r = self.client.get(url)
         contents = r.context['contents'].object_list
         for i, content in enumerate(reversed(contents)):
-            self.assertEquals(content.title, str(i))
+            self.assertEqual(content.title, str(i))
 
 class TaggedViewTest(MixinIndexTag, TestCase):
     def make_contents(self, count):
