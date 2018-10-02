@@ -180,6 +180,17 @@ class MixinIndexTag():
         r = self.client.get(url, {'page': 'something'})
         self.assertEqual(r.status_code, 200)
 
+    def test_first_page_when_contents_empty(self):
+        """
+        Contentがない場合に page=2 などへアクセスされた場合
+        pageパラメータが指定されなかったものとして処理する。
+        """
+        self.assertEqual(Content.objects.count(), 0)
+        url = reverse(self.url, kwargs=self.params)
+        r = self.client.get(url, {'page': '2'})
+        self.assertEqual(r.status_code, 200)
+        self.assertNotContains(r, 'page=2')
+
     def test_contents_paginated_by_ten(self):
         """
         Contentは10個ずつページネーションされる。
@@ -190,14 +201,14 @@ class MixinIndexTag():
         contents = r.context['contents'].object_list
         self.assertEquals(len(contents), 10)
 
-    def test_pagination_shows_at_most_five_pages(self):
+    def test_pagination_shows_at_most_three_pages(self):
         """
-        ページが6以上ある場合でも5つまでしか表示しない。
+        ページリンクは最大5つまでしか表示しない。
         """
         url = reverse(self.url, kwargs=self.params)
         self.make_contents(100)
-        r = self.client.get(url)
-        self.assertContains(r, 'page-item', 5+2) # last 2 means `prev` and `next` link
+        r = self.client.get(url, {'page': 2})
+        self.assertContains(r, 'page-item', 5)
 
 class IndexViewTest(MixinIndexTag, TestCase):
     def setUp(self):

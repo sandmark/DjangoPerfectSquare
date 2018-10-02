@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
-from pure_pagination import Paginator, PageNotAnInteger
+from django.core.paginator import Paginator, InvalidPage
 from .models import Content, Tag, Check
 
 @login_required
@@ -15,11 +15,11 @@ def index(request):
     """
     all_contents = Content.objects.all().order_by('-created')
     page = request.GET.get('page', 1)
-    p = Paginator(all_contents, 10, request=request)
+    p = Paginator(all_contents, 10)
 
     try:
         contents = p.page(page)
-    except PageNotAnInteger:
+    except InvalidPage:
         contents = p.page(1)
 
     context = {
@@ -73,11 +73,11 @@ def tagged_contents(request, tag_id):
 
     page = request.GET.get('page', 1)
 
-    p = Paginator(all_contents, 10, request=request)
+    p = Paginator(all_contents, 10)
 
     try:
         contents = p.page(page)
-    except PageNotAnInteger:
+    except InvalidPage:
         contents = p.page(1)
 
     context = {'contents': contents, 'tag': tag}
