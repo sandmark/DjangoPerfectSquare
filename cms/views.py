@@ -5,7 +5,6 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
-from django.core.paginator import Paginator, InvalidPage
 from django.views.generic import ListView
 
 from .models import Content, Tag, Check
