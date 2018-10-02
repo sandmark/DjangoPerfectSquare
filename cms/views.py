@@ -6,29 +6,26 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
 from django.core.paginator import Paginator, InvalidPage
+from django.views.generic import ListView
+
 from .models import Content, Tag, Check
 
-@login_required
-def index(request):
-    """
-    Contentをすべて取得し、ページネーションして描画する。
-    """
-    all_contents = Content.objects.all().order_by('-created')
-    page = request.GET.get('page', 1)
-    p = Paginator(all_contents, 10)
+class IndexView(ListView):
+    model = Content
+    paginate_by = 10
+    ordering = ['-created']
+    context_object_name = 'contents'
+    template_name = 'cms/index.html'
 
-    try:
-        contents = p.page(page)
-    except InvalidPage:
-        contents = p.page(1)
+class TagIndexView(ListView):
+    model = Content
+    paginate_by = 10
+    context_object_name = 'contents'
+    template_name = 'cms/tag_index.html'
 
-    context = {
-        'contents': contents,
-        'empty': Content.objects.count() == 0
-    }
-
-    return render(request, 'cms/index.html', context)
-
+    def get_queryset(self):
+        tag = get_object_or_404(Tag, pk=self.kwargs['tag_id'])
+        return Content.objects.filter(tags__id__exact=tag.id).order_by('title')
 
 @login_required
 def watch(request, content_id):
@@ -61,27 +58,6 @@ def render_content(content_id, template, request):
     """
     content = get_object_or_404(Content, pk=content_id)
     return render(request, template, {'content': content})
-
-
-@login_required
-def tagged_contents(request, tag_id):
-    """
-    指定されたタグを含むContentを描画する
-    """
-    tag = get_object_or_404(Tag, pk=tag_id)
-    all_contents = Content.objects.filter(tags__id__exact=tag.id).order_by('title')
-
-    page = request.GET.get('page', 1)
-
-    p = Paginator(all_contents, 10)
-
-    try:
-        contents = p.page(page)
-    except InvalidPage:
-        contents = p.page(1)
-
-    context = {'contents': contents, 'tag': tag}
-    return render(request, 'cms/tagged_contents.html', context)
 
 
 @login_required

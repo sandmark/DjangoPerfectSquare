@@ -174,7 +174,7 @@ class WatchFlashViewTest(MixinWatch, TestCase):
 
 class MixinIndexTag():
     """
-    MixIn class to test `index` and `tagged_contents` views.
+    MixIn class to test `index` and `tag_index` views.
     """
     @property
     def url(self):
@@ -188,24 +188,36 @@ class MixinIndexTag():
     def make_contents(self, count):
         raise NotImplementedError
 
+    @property
+    def create_content(title, filepath):
+        raise NotImplementedError
+
+    def test_show_contents(self):
+        """
+        Content.titleが表示される。
+        """
+        self.create_content(title='TestContent', filepath='nil')
+        url = reverse(self.url, kwargs=self.params)
+        r = self.client.get(url)
+        self.assertContains(r, 'TestContent')
+
     def test_page_not_an_integer(self):
         """
-        ?page=a などでアクセスされてもエラーを吐かない。
+        ?page=a など無効なページが指定された場合404エラーを返す。
         """
         url = reverse(self.url, kwargs=self.params)
         r = self.client.get(url, {'page': 'something'})
-        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.status_code, 404)
 
     def test_first_page_when_contents_empty(self):
         """
         Contentがない場合に page=2 などへアクセスされた場合
-        pageパラメータが指定されなかったものとして処理する。
+        404エラーを返す。
         """
         self.assertEqual(Content.objects.count(), 0)
         url = reverse(self.url, kwargs=self.params)
         r = self.client.get(url, {'page': '2'})
-        self.assertEqual(r.status_code, 200)
-        self.assertNotContains(r, 'page=2')
+        self.assertEqual(r.status_code, 404)
 
     def test_contents_paginated_by_ten(self):
         """
@@ -214,7 +226,7 @@ class MixinIndexTag():
         url = reverse(self.url, kwargs=self.params)
         self.make_contents(20)
         r = self.client.get(url)
-        contents = r.context['contents'].object_list
+        contents = r.context['contents']
         self.assertEqual(len(contents), 10)
 
     def test_pagination_shows_at_most_three_pages(self):
@@ -235,9 +247,13 @@ class IndexViewTest(MixinIndexTag, TestCase):
             name = str(i)
             Content(title=name, filepath=name).save()
 
+    def create_content(self, title, filepath):
+        return create_content(title, filepath)
+
     url = 'cms:index'
     params = {}
     make_contents = make_contents
+    create_content = create_content
 
     def test_no_contents(self):
         """
@@ -265,11 +281,18 @@ class IndexViewTest(MixinIndexTag, TestCase):
         for i in range(10):
             Content(title=str(i), filepath=i).save()
         r = self.client.get(url)
-        contents = r.context['contents'].object_list
+        contents = r.context['contents']
         for i, content in enumerate(reversed(contents)):
             self.assertEqual(content.title, str(i))
 
-class TaggedViewTest(MixinIndexTag, TestCase):
+class TagIndexViewTest(MixinIndexTag, TestCase):
+    def create_content(self, title, filepath):
+        tag = Tag.objects.get(pk=1)
+        c = create_content(title, filepath)
+        c.save()
+        c.tags.add(tag)
+        return c
+
     def make_contents(self, count):
         t = Tag.objects.get(pk=1)
         for i in range(count):
@@ -278,9 +301,10 @@ class TaggedViewTest(MixinIndexTag, TestCase):
             c.save()
             c.tags.add(t)
 
-    url = 'cms:tagged_contents'
+    url = 'cms:tag_index'
     params = {'tag_id': 1}
     make_contents = make_contents
+    create_content = create_content
 
     def setUp(self):
         login(self.client)
@@ -302,6 +326,6 @@ class TaggedViewTest(MixinIndexTag, TestCase):
         self.make_contents(10)
         url = reverse(self.url, kwargs=self.params)
         r = self.client.get(url)
-        contents = r.context['contents'].object_list
+        contents = r.context['contents']
         for i, content in enumerate(contents):
             self.assertEqual(str(i), content.title)

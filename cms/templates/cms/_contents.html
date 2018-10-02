@@ -3,7 +3,7 @@
 
 <table class="table table-striped">
   <tbody>
-    {% for content in contents.object_list %}
+    {% for content in contents %}
     {% user_checked request.user content as checked %}
     <tr>
       <td style="width: 1em;" >
@@ -32,11 +32,14 @@
 
 <!-- Pagination -->
 {% load define_action %}
-{% if not contents.has_previous %}
+
+{% if is_paginated %}
+
+{% if not page_obj.has_previous %}
   {% define "disabled" as previous %}
 {% endif %}
 
-{% if not contents.has_next %}
+{% if not page_obj.has_next %}
   {% define "disabled" as next %}
 {% endif %}
 
@@ -45,27 +48,29 @@
         <a class="page-link" href="?page=1" aria-label="First">&laquo;</a>
     </li>
 
-    {% if contents.has_previous %}
+    {% if page_obj.has_previous %}
     <li class="page-item">
-        <a class="page-link" href="?page={{ contents.previous_page_number }}" aria-label="Previous">
-            {{ contents.previous_page_number }}
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+            {{ page_obj.previous_page_number }}
         </a>
     </li>
     {% endif %}
 
     <li class="page-item disabled">
-        <a class="page-link" href="?page={{ contents.number }}" aria-label="Current">{{ contents.number }}</a>
+        <a class="page-link" href="?page={{ page_obj.number }}" aria-label="Current">{{ page_obj.number }}</a>
     </li>
 
-    {% if contents.has_next %}
+    {% if page_obj.has_next %}
     <li class="page-item">
-        <a class="page-link" href="?page={{ contents.next_page_number }}" aria-label="Next">
-            {{ contents.next_page_number }}
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+            {{ page_obj.next_page_number }}
         </a>
     </li>
     {% endif %}
 
     <li class="page-item {{next}}">
-        <a class="page-link" href="?page={{ contents.paginator.num_pages }}" aria-label="Last">&raquo;</a>
+        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">&raquo;</a>
     </li>
 </ul>
+
+{% endif %}

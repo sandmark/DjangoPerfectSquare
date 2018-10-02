@@ -79,7 +79,7 @@
             {% for tag in all_tags %}
             <li class="nav-item" >
               <a class="nav-link"
-                 href="{% url 'cms:tagged_contents' tag.id %}">{{tag.name}}</a>
+                 href="{% url 'cms:tag_index' tag.id %}">{{tag.name}}</a>
             </li>
             {% endfor %}
           </ul>
