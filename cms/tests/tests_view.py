@@ -5,6 +5,22 @@ from django.contrib.auth.models import User
 from ..models import Content, Tag, Check
 from .helpers import login, create_content
 
+class LayoutViewTest(TestCase):
+    def test_show_admin_menu_only_admin_user(self):
+        """
+        管理メニューはAdminにのみ表示される。
+        """
+        login(self.client)
+        r = self.client.get('/')
+        self.assertNotContains(r, "管理")
+
+        u = User(username='admin', is_staff=True)
+        u.set_password('admin')
+        u.save()
+        self.client.login(username=u.username, password='admin')
+        r = self.client.get('/')
+        self.assertContains(r, '管理')
+
 class MixinCheck():
     @property
     def urlname(self):
@@ -180,6 +196,17 @@ class MixinIndexTag():
         r = self.client.get(url, {'page': 'something'})
         self.assertEqual(r.status_code, 200)
 
+    def test_first_page_when_contents_empty(self):
+        """
+        Contentがない場合に page=2 などへアクセスされた場合
+        pageパラメータが指定されなかったものとして処理する。
+        """
+        self.assertEqual(Content.objects.count(), 0)
+        url = reverse(self.url, kwargs=self.params)
+        r = self.client.get(url, {'page': '2'})
+        self.assertEqual(r.status_code, 200)
+        self.assertNotContains(r, 'page=2')
+
     def test_contents_paginated_by_ten(self):
         """
         Contentは10個ずつページネーションされる。
@@ -188,16 +215,16 @@ class MixinIndexTag():
         self.make_contents(20)
         r = self.client.get(url)
         contents = r.context['contents'].object_list
-        self.assertEquals(len(contents), 10)
+        self.assertEqual(len(contents), 10)
 
-    def test_pagination_shows_at_most_five_pages(self):
+    def test_pagination_shows_at_most_three_pages(self):
         """
-        ページが6以上ある場合でも5つまでしか表示しない。
+        ページリンクは最大5つまでしか表示しない。
         """
         url = reverse(self.url, kwargs=self.params)
         self.make_contents(100)
-        r = self.client.get(url)
-        self.assertContains(r, 'page-item', 5+2) # last 2 means `prev` and `next` link
+        r = self.client.get(url, {'page': 2})
+        self.assertContains(r, 'page-item', 5)
 
 class IndexViewTest(MixinIndexTag, TestCase):
     def setUp(self):
@@ -240,7 +267,7 @@ class IndexViewTest(MixinIndexTag, TestCase):
         r = self.client.get(url)
         contents = r.context['contents'].object_list
         for i, content in enumerate(reversed(contents)):
-            self.assertEquals(content.title, str(i))
+            self.assertEqual(content.title, str(i))
 
 class TaggedViewTest(MixinIndexTag, TestCase):
     def make_contents(self, count):
