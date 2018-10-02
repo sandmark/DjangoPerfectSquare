@@ -7,9 +7,15 @@ app_name = 'cms'
 urlpatterns = [
     path('', login_required(views.IndexView.as_view()), name='index'),
     path('tags/<int:tag_id>/contents/', login_required(views.TagIndexView.as_view()), name='tag_index'),
-    path('watch/<int:content_id>/', views.watch, name='watch'),
-    path('watch/<int:content_id>/flash/', views.watch_flash, name='watch_flash'),
-    path('watch/<int:content_id>/jw/', views.watch_jw, name='watch_jw'),
+    path('watch/<int:pk>/',
+         login_required(views.WatchView.as_view(template_name='cms/watch_html5.html')),
+         name='watch'),
+    path('watch/<int:pk>/flash/',
+         login_required(views.WatchView.as_view(template_name='cms/watch_flash.html')),
+         name='watch_flash'),
+    path('watch/<int:pk>/jw/',
+         login_required(views.WatchView.as_view(template_name='cms/watch_jw.html')),
+         name='watch_jw'),
     path('contents/<int:content_id>/check/', views.check, name='check'),
     path('contents/<int:content_id>/uncheck/', views.uncheck, name='uncheck'),
 ]

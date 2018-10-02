@@ -54,7 +54,7 @@ class MixinCheck():
         """
         c = self.create_content()
         url = reverse(self.urlname, kwargs={'content_id': c.id})
-        redirected = reverse('cms:watch', kwargs={'content_id': c.id})
+        redirected = reverse('cms:watch', kwargs={'pk': c.id})
         r = self.client.get(url)
         self.assertRedirects(r, redirected)
 
@@ -127,7 +127,7 @@ class MixinWatch():
         """
         count = Content.objects.count()
         self.assertEqual(count, 0)
-        url = reverse(self.url_name, kwargs={'content_id': 1})
+        url = reverse(self.url_name, kwargs={'pk': 1})
         r = self.client.get(url)
         self.assertEqual(r.status_code, 404)
 
@@ -143,7 +143,7 @@ class MixinWatch():
         cms:watchはhtml5プレイヤーを表示する。
         """
         c = create_content()
-        url = reverse(self.url_name, kwargs={'content_id': c.id})
+        url = reverse(self.url_name, kwargs={'pk': c.id})
         r = self.client.get(url)
         self.assertContains(r, self.contains)
 

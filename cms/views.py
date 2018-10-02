@@ -1,11 +1,9 @@
 """
 cms/view.py
 """
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from .models import Content, Tag, Check
 
@@ -26,38 +24,9 @@ class TagIndexView(ListView):
         tag = get_object_or_404(Tag, pk=self.kwargs['tag_id'])
         return Content.objects.filter(tags__id__exact=tag.id).order_by('title')
 
-@login_required
-def watch(request, content_id):
-    """
-    HTML5プレイヤーを表示する
-    """
-    return render_content(content_id, 'cms/watch_html5.html', request)
-
-
-@login_required
-def watch_flash(request, content_id):
-    """
-    Flashプレイヤーを表示する
-    """
-    return render_content(content_id, 'cms/watch_flash.html', request)
-
-
-@login_required
-def watch_jw(request, content_id):
-    """
-    JW Playerを表示する
-    """
-    return render_content(content_id, 'cms/watch_jw.html', request)
-
-
-def render_content(content_id, template, request):
-    """
-    Helper function.
-    指定されたContent#idで検索し、指定されたテンプレートを描画する
-    """
-    content = get_object_or_404(Content, pk=content_id)
-    return render(request, template, {'content': content})
-
+class WatchView(DetailView):
+    model = Content
+    context_object_name = 'content'
 
 @login_required
 def check(request, content_id):
