@@ -31,10 +31,10 @@ class WatchView(DetailView):
 
 class CheckBaseView(View):
     def redirect_to_next(self, request, default, *args, **kwargs):
-        dest = request.GET['next'] if 'next' in request.GET else default
+        dest = request.POST['next'] if 'next' in request.POST else default
         return redirect(dest, *args)
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         content = get_object_or_404(Content, pk=kwargs['pk'])
         check = Check.objects.filter(user=request.user, content=content)
         check.delete() if check else Check(user=request.user, content=content).save()

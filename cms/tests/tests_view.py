@@ -35,7 +35,7 @@ class MixinCheck():
         指定されたContentが存在しない場合404エラーを返す。
         """
         url = reverse(self.urlname, kwargs={'pk': 404})
-        r = self.client.get(url)
+        r = self.client.post(url)
         self.assertEqual(r.status_code, 404)
 
     def test_check_redirect_to_next(self):
@@ -44,7 +44,7 @@ class MixinCheck():
         """
         c = self.create_content()
         url = reverse(self.urlname, kwargs={'pk': c.id})
-        r = self.client.get(url, {'next': '/'})
+        r = self.client.post(url, {'next': '/'})
         self.assertRedirects(r, '/')
 
     def test_check_redirect_to_default(self):
@@ -55,7 +55,7 @@ class MixinCheck():
         c = self.create_content()
         url = reverse(self.urlname, kwargs={'pk': c.id})
         redirected = reverse('cms:watch', kwargs={'pk': c.id})
-        r = self.client.get(url)
+        r = self.client.post(url)
         self.assertRedirects(r, redirected)
 
 class CheckTest(MixinCheck, TestCase):
@@ -74,7 +74,7 @@ class CheckTest(MixinCheck, TestCase):
         """
         c = self.create_content()
         url = reverse(self.urlname, kwargs={'pk': c.id})
-        self.client.get(url)
+        self.client.post(url)
         count = Check.objects.count()
         self.assertEqual(count, 1)
 
@@ -105,7 +105,7 @@ class UncheckTest(MixinCheck, TestCase):
         url = reverse(self.urlname, kwargs={'pk': c.id})
         user = User.objects.first()
         Check(user=user, content=c).save()
-        self.client.get(url)
+        self.client.post(url)
         self.assertEqual(Check.objects.count(), 0)
 
 class MixinWatch():
