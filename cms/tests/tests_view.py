@@ -34,7 +34,7 @@ class MixinCheck():
         """
         指定されたContentが存在しない場合404エラーを返す。
         """
-        url = reverse(self.urlname, kwargs={'content_id': 404})
+        url = reverse(self.urlname, kwargs={'pk': 404})
         r = self.client.get(url)
         self.assertEqual(r.status_code, 404)
 
@@ -43,7 +43,7 @@ class MixinCheck():
         ?nextパラメータが指定されている場合、そちらにリダイレクトする。
         """
         c = self.create_content()
-        url = reverse(self.urlname, kwargs={'content_id': c.id})
+        url = reverse(self.urlname, kwargs={'pk': c.id})
         r = self.client.get(url, {'next': '/'})
         self.assertRedirects(r, '/')
 
@@ -53,7 +53,7 @@ class MixinCheck():
         デフォルトで cms:watch へリダイレクトする。
         """
         c = self.create_content()
-        url = reverse(self.urlname, kwargs={'content_id': c.id})
+        url = reverse(self.urlname, kwargs={'pk': c.id})
         redirected = reverse('cms:watch', kwargs={'pk': c.id})
         r = self.client.get(url)
         self.assertRedirects(r, redirected)
@@ -73,7 +73,7 @@ class CheckTest(MixinCheck, TestCase):
         対象ContentとUserの間にCheckオブジェクトが生成される。
         """
         c = self.create_content()
-        url = reverse(self.urlname, kwargs={'content_id': c.id})
+        url = reverse(self.urlname, kwargs={'pk': c.id})
         self.client.get(url)
         count = Check.objects.count()
         self.assertEqual(count, 1)
@@ -102,7 +102,7 @@ class UncheckTest(MixinCheck, TestCase):
         対象ContentとUserの間からCheckオブジェクトが削除される。
         """
         c = create_content()
-        url = reverse(self.urlname, kwargs={'content_id': c.id})
+        url = reverse(self.urlname, kwargs={'pk': c.id})
         user = User.objects.first()
         Check(user=user, content=c).save()
         self.client.get(url)

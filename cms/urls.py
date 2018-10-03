@@ -16,6 +16,6 @@ urlpatterns = [
     path('watch/<int:pk>/jw/',
          login_required(views.WatchView.as_view(template_name='cms/watch_jw.html')),
          name='watch_jw'),
-    path('contents/<int:content_id>/check/', views.check, name='check'),
-    path('contents/<int:content_id>/uncheck/', views.uncheck, name='uncheck'),
+    path('contents/<int:pk>/check/', login_required(views.CheckBaseView.as_view()), name='check'),
+    path('contents/<int:pk>/uncheck/', login_required(views.CheckBaseView.as_view()), name='uncheck'),
 ]
