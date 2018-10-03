@@ -13,17 +13,23 @@ class IndexView(ListView):
     paginate_by = 10
     ordering = ['-created']
     context_object_name = 'contents'
-    template_name = 'cms/index.html'
+    template_name = 'cms/index.haml'
 
 class TagIndexView(ListView):
     model = Content
     paginate_by = 10
     context_object_name = 'contents'
-    template_name = 'cms/tag_index.html'
+    template_name = 'cms/tag_index.haml'
 
     def get_queryset(self):
         tag = get_object_or_404(Tag, pk=self.kwargs['tag_id'])
         return Content.objects.filter(tags__id__exact=tag.id).order_by('title')
+
+    def get_context_data(self, **kwargs):
+        tag = get_object_or_404(Tag, pk=self.kwargs['tag_id'])
+        context = super().get_context_data(**kwargs)
+        context['tag'] = tag
+        return context
 
 class WatchView(DetailView):
     model = Content

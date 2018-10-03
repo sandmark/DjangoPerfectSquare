@@ -1,0 +1,27 @@
+- extends "cms/watch.haml"
+- load static
+- load watch
+
+- block navlink
+  %li.nav-item
+    %a.nav-link{href: "{% url 'cms:watch' content.id %}"} HTML5
+  %li.nav-item
+    %a.nav-link{href: "{% url 'cms:watch_flash' content.id %}"} Flash
+  %li.nav-item
+    %a.nav-link.active JW Player
+
+- block extrahead
+  %script{type: "text/javascript", src: "{% static 'cms/jwplayer.js' %}"}
+  %script{type: "text/javascript", src: "{% static 'cms/jwplayer.html5.js' %}"}
+
+- block jwplayer
+  %div{align: "center"}
+    #jwplayer This div will be replaced by the JW Player.
+
+  %script{type: "text/javascript"}
+    jwplayer('jwplayer').setup({
+    "flashplayer": "{% static 'cms/flash.swf' %}",
+    "width": "640",
+    "height": "360",
+    "file": "#{ content.filepath|quote_filepath }"
+    });
