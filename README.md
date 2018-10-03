@@ -3,6 +3,9 @@
 
 # CHANGELOG
 
+## 1.0.2
+- Content を削除したときに S3 上のファイルも削除されるように変更。
+
 ## 1.0.1
 - [django-hamlpy](django-hamlpy) をインストール
 
