@@ -1,0 +1,13 @@
+- extends 'cms/watch.haml'
+- load watch
+
+- block navlink
+  %li.nav-item
+    %a.nav-link.active HTML5
+  %li.nav-item
+    %a.nav-link{href: "{% url 'cms:watch_flash' content.id %}"} Flash
+  %li.nav-item
+    %a.nav-link{href: "{% url 'cms:watch_jw' content.id %}"} JW Player
+
+- block player
+  %video{controls, type: 'video/mp4', src: '#{ content.filepath|quote_filepath }'}
