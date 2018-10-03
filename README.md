@@ -1,7 +1,10 @@
 # PerfectSquare
-[![Build Status](https://travis-ci.org/sandmark/DjangoPerfectSquare.svg?branch=develop)](https://travis-ci.org/sandmark/DjangoPerfectSquare)
+[![Build Status](https://travis-ci.org/sandmark/DjangoPerfectSquare.svg?branch=master)](https://travis-ci.org/sandmark/DjangoPerfectSquare)
 
 # CHANGELOG
+
+## 1.0.1
+- [django-hamlpy](django-hamlpy) をインストール
 
 ## 1.0.0
 - Django 2.1 にアップグレード
@@ -57,3 +60,5 @@ heroku へのデプロイに必要なファイルを用意。
 
 ## 0.1.0
 heroku にデプロイ。
+
+[django-hamlpy]: https://github.com/nyaruka/django-hamlpy
