@@ -72,8 +72,19 @@ TEMPLATES = [
             os.path.join(BASE_DIR, 'templates'),
             os.path.join(BASE_DIR, 'templates', 'allauth'),
         ],
-        'APP_DIRS': True,
         'OPTIONS': {
+            'loaders': (
+                # 'django-hamlpy' loaders can be used with template caching.
+                # Just comment these lines below out to activate.
+                #
+                # ('django.template.loaders.cached.Loader', (
+                #     'hamlpy.template.loaders.HamlPyFilesystemLoader',
+                #     'hamlpy.template.loaders.HamlPyAppDirectoriesLoader',
+                # ))
+                #
+                'hamlpy.template.loaders.HamlPyFilesystemLoader',
+                'hamlpy.template.loaders.HamlPyAppDirectoriesLoader',
+            ),
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
