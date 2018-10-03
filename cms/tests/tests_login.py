@@ -9,6 +9,14 @@ password = 'test'
 def login(client):
     return client.login(username=username, password=password)
 
+class LoginTests(TestCase):
+    def test_login_page(self):
+        """
+        ログインフォームが表示される。
+        """
+        r = self.client.get('/accounts/login/')
+        self.assertContains(r, 'ログイン')
+
 class IndexViewTests(TestCase):
     def setUp(self):
         """
