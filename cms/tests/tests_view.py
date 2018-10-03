@@ -5,6 +5,22 @@ from django.contrib.auth.models import User
 from ..models import Content, Tag, Check
 from .helpers import login, create_content
 
+class LayoutViewTest(TestCase):
+    def test_show_admin_menu_only_admin_user(self):
+        """
+        管理メニューはAdminにのみ表示される。
+        """
+        login(self.client)
+        r = self.client.get('/')
+        self.assertNotContains(r, "管理")
+
+        u = User(username='admin', is_staff=True)
+        u.set_password('admin')
+        u.save()
+        self.client.login(username=u.username, password='admin')
+        r = self.client.get('/')
+        self.assertContains(r, '管理')
+
 class MixinCheck():
     @property
     def urlname(self):
@@ -18,8 +34,8 @@ class MixinCheck():
         """
         指定されたContentが存在しない場合404エラーを返す。
         """
-        url = reverse(self.urlname, kwargs={'content_id': 404})
-        r = self.client.get(url)
+        url = reverse(self.urlname, kwargs={'pk': 404})
+        r = self.client.post(url)
         self.assertEqual(r.status_code, 404)
 
     def test_check_redirect_to_next(self):
@@ -27,8 +43,8 @@ class MixinCheck():
         ?nextパラメータが指定されている場合、そちらにリダイレクトする。
         """
         c = self.create_content()
-        url = reverse(self.urlname, kwargs={'content_id': c.id})
-        r = self.client.get(url, {'next': '/'})
+        url = reverse(self.urlname, kwargs={'pk': c.id})
+        r = self.client.post(url, {'next': '/'})
         self.assertRedirects(r, '/')
 
     def test_check_redirect_to_default(self):
@@ -37,9 +53,9 @@ class MixinCheck():
         デフォルトで cms:watch へリダイレクトする。
         """
         c = self.create_content()
-        url = reverse(self.urlname, kwargs={'content_id': c.id})
-        redirected = reverse('cms:watch', kwargs={'content_id': c.id})
-        r = self.client.get(url)
+        url = reverse(self.urlname, kwargs={'pk': c.id})
+        redirected = reverse('cms:watch', kwargs={'pk': c.id})
+        r = self.client.post(url)
         self.assertRedirects(r, redirected)
 
 class CheckTest(MixinCheck, TestCase):
@@ -57,8 +73,8 @@ class CheckTest(MixinCheck, TestCase):
         対象ContentとUserの間にCheckオブジェクトが生成される。
         """
         c = self.create_content()
-        url = reverse(self.urlname, kwargs={'content_id': c.id})
-        self.client.get(url)
+        url = reverse(self.urlname, kwargs={'pk': c.id})
+        self.client.post(url)
         count = Check.objects.count()
         self.assertEqual(count, 1)
 
@@ -86,10 +102,10 @@ class UncheckTest(MixinCheck, TestCase):
         対象ContentとUserの間からCheckオブジェクトが削除される。
         """
         c = create_content()
-        url = reverse(self.urlname, kwargs={'content_id': c.id})
+        url = reverse(self.urlname, kwargs={'pk': c.id})
         user = User.objects.first()
         Check(user=user, content=c).save()
-        self.client.get(url)
+        self.client.post(url)
         self.assertEqual(Check.objects.count(), 0)
 
 class MixinWatch():
@@ -111,7 +127,7 @@ class MixinWatch():
         """
         count = Content.objects.count()
         self.assertEqual(count, 0)
-        url = reverse(self.url_name, kwargs={'content_id': 1})
+        url = reverse(self.url_name, kwargs={'pk': 1})
         r = self.client.get(url)
         self.assertEqual(r.status_code, 404)
 
@@ -127,7 +143,7 @@ class MixinWatch():
         cms:watchはhtml5プレイヤーを表示する。
         """
         c = create_content()
-        url = reverse(self.url_name, kwargs={'content_id': c.id})
+        url = reverse(self.url_name, kwargs={'pk': c.id})
         r = self.client.get(url)
         self.assertContains(r, self.contains)
 
@@ -158,7 +174,7 @@ class WatchFlashViewTest(MixinWatch, TestCase):
 
 class MixinIndexTag():
     """
-    MixIn class to test `index` and `tagged_contents` views.
+    MixIn class to test `index` and `tag_index` views.
     """
     @property
     def url(self):
@@ -172,13 +188,36 @@ class MixinIndexTag():
     def make_contents(self, count):
         raise NotImplementedError
 
+    @property
+    def create_content(title, filepath):
+        raise NotImplementedError
+
+    def test_show_contents(self):
+        """
+        Content.titleが表示される。
+        """
+        self.create_content(title='TestContent', filepath='nil')
+        url = reverse(self.url, kwargs=self.params)
+        r = self.client.get(url)
+        self.assertContains(r, 'TestContent')
+
     def test_page_not_an_integer(self):
         """
-        ?page=a などでアクセスされてもエラーを吐かない。
+        ?page=a など無効なページが指定された場合404エラーを返す。
         """
         url = reverse(self.url, kwargs=self.params)
         r = self.client.get(url, {'page': 'something'})
-        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.status_code, 404)
+
+    def test_first_page_when_contents_empty(self):
+        """
+        Contentがない場合に page=2 などへアクセスされた場合
+        404エラーを返す。
+        """
+        self.assertEqual(Content.objects.count(), 0)
+        url = reverse(self.url, kwargs=self.params)
+        r = self.client.get(url, {'page': '2'})
+        self.assertEqual(r.status_code, 404)
 
     def test_contents_paginated_by_ten(self):
         """
@@ -187,17 +226,17 @@ class MixinIndexTag():
         url = reverse(self.url, kwargs=self.params)
         self.make_contents(20)
         r = self.client.get(url)
-        contents = r.context['contents'].object_list
-        self.assertEquals(len(contents), 10)
+        contents = r.context['contents']
+        self.assertEqual(len(contents), 10)
 
-    def test_pagination_shows_at_most_five_pages(self):
+    def test_pagination_shows_at_most_three_pages(self):
         """
-        ページが6以上ある場合でも5つまでしか表示しない。
+        ページリンクは最大5つまでしか表示しない。
         """
         url = reverse(self.url, kwargs=self.params)
         self.make_contents(100)
-        r = self.client.get(url)
-        self.assertContains(r, 'page-item', 5+2) # last 2 means `prev` and `next` link
+        r = self.client.get(url, {'page': 2})
+        self.assertContains(r, 'page-item', 5)
 
 class IndexViewTest(MixinIndexTag, TestCase):
     def setUp(self):
@@ -208,9 +247,13 @@ class IndexViewTest(MixinIndexTag, TestCase):
             name = str(i)
             Content(title=name, filepath=name).save()
 
+    def create_content(self, title, filepath):
+        return create_content(title, filepath)
+
     url = 'cms:index'
     params = {}
     make_contents = make_contents
+    create_content = create_content
 
     def test_no_contents(self):
         """
@@ -238,11 +281,18 @@ class IndexViewTest(MixinIndexTag, TestCase):
         for i in range(10):
             Content(title=str(i), filepath=i).save()
         r = self.client.get(url)
-        contents = r.context['contents'].object_list
+        contents = r.context['contents']
         for i, content in enumerate(reversed(contents)):
-            self.assertEquals(content.title, str(i))
+            self.assertEqual(content.title, str(i))
 
-class TaggedViewTest(MixinIndexTag, TestCase):
+class TagIndexViewTest(MixinIndexTag, TestCase):
+    def create_content(self, title, filepath):
+        tag = Tag.objects.get(pk=1)
+        c = create_content(title, filepath)
+        c.save()
+        c.tags.add(tag)
+        return c
+
     def make_contents(self, count):
         t = Tag.objects.get(pk=1)
         for i in range(count):
@@ -251,9 +301,10 @@ class TaggedViewTest(MixinIndexTag, TestCase):
             c.save()
             c.tags.add(t)
 
-    url = 'cms:tagged_contents'
+    url = 'cms:tag_index'
     params = {'tag_id': 1}
     make_contents = make_contents
+    create_content = create_content
 
     def setUp(self):
         login(self.client)
@@ -275,6 +326,6 @@ class TaggedViewTest(MixinIndexTag, TestCase):
         self.make_contents(10)
         url = reverse(self.url, kwargs=self.params)
         r = self.client.get(url)
-        contents = r.context['contents'].object_list
+        contents = r.context['contents']
         for i, content in enumerate(contents):
             self.assertEqual(str(i), content.title)

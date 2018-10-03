@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block alert %}
-{% if empty %}
+{% if contents|length == 0 %}
 <div class="alert alert-primary" role="alert" >
   アップロードされたものがありません。
 </div>
@@ -11,4 +11,3 @@
 {% block content %}
 {% include 'cms/_contents.html' %}
 {% endblock content %}
-

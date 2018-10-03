@@ -1,12 +1,21 @@
-from django.conf.urls import url
+from django.urls import path
+from django.contrib.auth.decorators import login_required
 from cms import views
 
+app_name = 'cms'
+
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
-    url(r'^watch/(?P<content_id>\d+)/$', views.watch, name='watch'),
-    url(r'^watch/(?P<content_id>\d+)/flash/$', views.watch_flash, name='watch_flash'),
-    url(r'^watch/(?P<content_id>\d+)/jw/$', views.watch_jw, name='watch_jw'),
-    url(r'^tags/(?P<tag_id>\d+)/contents/$', views.tagged_contents, name='tagged_contents'),
-    url(r'^contents/(?P<content_id>\d+)/check/$', views.check, name='check'),
-    url(r'^contents/(?P<content_id>\d+)/uncheck/$', views.uncheck, name='uncheck'),
+    path('', login_required(views.IndexView.as_view()), name='index'),
+    path('tags/<int:tag_id>/contents/', login_required(views.TagIndexView.as_view()), name='tag_index'),
+    path('watch/<int:pk>/',
+         login_required(views.WatchView.as_view(template_name='cms/watch_html5.html')),
+         name='watch'),
+    path('watch/<int:pk>/flash/',
+         login_required(views.WatchView.as_view(template_name='cms/watch_flash.html')),
+         name='watch_flash'),
+    path('watch/<int:pk>/jw/',
+         login_required(views.WatchView.as_view(template_name='cms/watch_jw.html')),
+         name='watch_jw'),
+    path('contents/<int:pk>/check/', login_required(views.CheckBaseView.as_view()), name='check'),
+    path('contents/<int:pk>/uncheck/', login_required(views.CheckBaseView.as_view()), name='uncheck'),
 ]
