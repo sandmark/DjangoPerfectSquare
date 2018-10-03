@@ -1,7 +1,10 @@
 # PerfectSquare
-[![Build Status](https://travis-ci.org/sandmark/DjangoPerfectSquare.svg?branch=develop)](https://travis-ci.org/sandmark/DjangoPerfectSquare)
+[![Build Status](https://travis-ci.org/sandmark/DjangoPerfectSquare.svg?branch=master)](https://travis-ci.org/sandmark/DjangoPerfectSquare)
 
 # CHANGELOG
+
+## 1.0.0
+- Django 2.1 にアップグレード
 
 ## 0.9.7
 - TravisCI を有効化
@@ -53,4 +56,4 @@ heroku での 30 秒制限を回避。
 heroku へのデプロイに必要なファイルを用意。
 
 ## 0.1.0
-herokuにデプロイ。
+heroku にデプロイ。
