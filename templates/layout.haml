@@ -10,7 +10,7 @@
     %link{href: "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css", media: "screen,projection", rel: "stylesheet", type: "text/css"}/
     %link{href: "{% static 'cms/style.css' %}", media: "screen,projection", rel: "stylesheet", type: "text/css"}/
   %body
-    %nav.light-blue.lighten-1{role: "navigation"}
+    %nav.grey{role: "navigation"}
       .nav-wrapper.container
         %a#logo-container.brand-logo{href: "{% url 'cms:index' %}"} PerfectSquare
         %ul.right.hide-on-med-and-down
@@ -56,38 +56,38 @@
               %p.light We have provided detailed documentation as well as specific code examples to help new users get started. We are also always open to feedback and can answer any questions a user may have about Materialize.
       %br/
       %br/
-    %footer.page-footer.orange
+    %footer.page-footer.grey
       .container
         .row
           .col.l6.s12
-            %h5.white-text Company Bio
-            %p.grey-text.text-lighten-4 We are a team of college students working on this project like it's our full time job. Any amount would help support and continue development on this project and is greatly appreciated.
+            %h5.white-text PerfectSquare
+            %p.grey-text.text-lighten-4 powered by Materialize, Heroku, Django and Python3.
           .col.l3.s12
-            %h5.white-text Settings
+            %h5.white-text Product Links
             %ul
               %li
-                %a.white-text{href: "#!"} Link 1
+                %a.white-text{href: "https://materializecss.com"} Materialize
               %li
-                %a.white-text{href: "#!"} Link 2
+                %a.white-text{href: "https://www.heroku.com/"} Heroku
               %li
-                %a.white-text{href: "#!"} Link 3
+                %a.white-text{href: "https://www.djangoproject.com/"} Django
               %li
-                %a.white-text{href: "#!"} Link 4
+                %a.white-text{href: "https://www.python.org/"} Python
           .col.l3.s12
-            %h5.white-text Connect
+            %h5.white-text Contact me
             %ul
               %li
-                %a.white-text{href: "#!"} Link 1
+                %a.white-text{href: "https://twitter.com/sandmarkM"} Twitter
               %li
-                %a.white-text{href: "#!"} Link 2
+                %a.white-text{href: "http://sandmark.hateblo.jp"} Blog
               %li
-                %a.white-text{href: "#!"} Link 3
+                %a.white-text{href: "https://www.facebook.com/sandmarkM"} Facebook
               %li
-                %a.white-text{href: "#!"} Link 4
+                %a.white-text{href: "https://github.com/sandmark"} GitHub
       .footer-copyright
         .container
           Made by
-          %a.orange-text.text-lighten-3{href: "http://materializecss.com"} Materialize
+          %a.grey-text.text-lighten-3{href: "https://github.com/sandmark"} sandmark
     / Scripts
     %script{src: "https://code.jquery.com/jquery-2.1.1.min.js"}
     %script{src: "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"}
