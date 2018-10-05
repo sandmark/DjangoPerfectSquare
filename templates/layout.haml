@@ -1,3 +1,4 @@
+{% load static %}
 !!!
 %html{lang: "en"}
   %head
@@ -7,10 +8,11 @@
     / CSS
     %link{href: "https://fonts.googleapis.com/icon?family=Material+Icons", rel: "stylesheet"}/
     %link{href: "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css", media: "screen,projection", rel: "stylesheet", type: "text/css"}/
+    %link{href: "{% static 'cms/style.css' %}", media: "screen,projection", rel: "stylesheet", type: "text/css"}/
   %body
     %nav.light-blue.lighten-1{role: "navigation"}
       .nav-wrapper.container
-        %a#logo-container.brand-logo{href: "#"} Logo
+        %a#logo-container.brand-logo{href: "{% url 'cms:index' %}"} PerfectSquare
         %ul.right.hide-on-med-and-down
           %li
             %a{href: "#"} Navbar Link
@@ -89,3 +91,4 @@
     / Scripts
     %script{src: "https://code.jquery.com/jquery-2.1.1.min.js"}
     %script{src: "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"}
+    %script{src: "{% static 'cms/init.js' %}"}
