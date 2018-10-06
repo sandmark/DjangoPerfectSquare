@@ -31,3 +31,7 @@ main {
 .waves-effect.waves-brown:hover {
     background-color: rgba(121, 85, 72, 0.65)
 }
+
+a.dropdown-trigger:focus {
+    outline: none;
+}
