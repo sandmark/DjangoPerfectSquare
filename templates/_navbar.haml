@@ -3,12 +3,11 @@
   / Modal Structure
   .modal#logout-modal
     .modal-content
-      %h4.teal-text ログアウト
-      %p ログアウトしてよろしいですか？
+      %p.center.deep-orange-text.darken-4 ログアウトしてよろしいですか？
     .modal-footer
       %form{method: "POST", action: "{% url 'account_logout' %}"}
         - csrf_token
-        %button.btn.waves-effect.waves-teal{type: "submit"} はい
+        %button.btn.waves-effect.waves-brown{type: "submit"} はい
         %a.modal-close.btn-flat{href: "#!"} いいえ
 
   %ul.dropdown-content#user-dropdown-sidenav
