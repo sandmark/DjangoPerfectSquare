@@ -1,5 +1,16 @@
 / Dropdown Structure
 - if user.is_authenticated
+  / Modal Structure
+  .modal#logout-modal
+    .modal-content
+      %h4.teal-text ログアウト
+      %p ログアウトしてよろしいですか？
+    .modal-footer
+      %form{method: "POST", action: "{% url 'account_logout' %}"}
+        - csrf_token
+        %button.btn.waves-effect.waves-teal{type: "submit"} はい
+        %a.modal-close.btn-flat{href: "#!"} いいえ
+
   %ul.dropdown-content#user-dropdown-sidenav
     - include "_navbar_dropdown_user.haml"
   %ul.dropdown-content#user-dropdown-navbar
