@@ -1,0 +1,25 @@
+/ Dropdown Structure
+- if user.is_authenticated
+  %ul.dropdown-content#user-dropdown-sidenav
+    - include "_navbar_dropdown_user.haml"
+  %ul.dropdown-content#user-dropdown-navbar
+    - include "_navbar_dropdown_user.haml"
+
+  %nav.grey{role: "navigation"}
+    .nav-wrapper.container
+      %a#logo-container.brand-logo{href: "{% url 'cms:index' %}"} PerfectSquare
+      %ul.right.hide-on-med-and-down
+        - if user.is_authenticated
+          %li
+            %a.dropdown-trigger{href: "#!", data-target: "user-dropdown-navbar"}
+              %i.material-icons.left person
+
+      / Navbar mobile
+      %ul#nav-mobile.sidenav
+        - if user.is_authenticated
+          %li
+            %a.dropdown-trigger{href: "#!", data-target: "user-dropdown-sidenav"}
+              %i.material-icons.left person
+              #{ user.username }
+      %a.sidenav-trigger{"data-target": "nav-mobile", href: "#"}
+        %i.material-icons menu

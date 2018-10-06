@@ -1,0 +1,9 @@
+%li
+  %a{href: "{% url 'account_reset_password' %}"} パスワードの変更
+%li.divider
+%li
+  %a{href: "#"} ログアウト
+- if user.is_staff
+  %li.divider
+  %li
+    %a{href: '/admin'} Admin
