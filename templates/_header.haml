@@ -19,7 +19,7 @@
 
 / Navbar mobile Trigger Icon
 .container
-  %a.top-nav.sidenav-trigger.full.hide-on-large-only{href: "#!", data-target: "nav-mobile"}
+  %a.indigo-text.top-nav.sidenav-trigger.full.hide-on-large-only{href: "#!", data-target: "nav-mobile"}
     %i.material-icons menu
 
 %ul#nav-mobile.sidenav.sidenav-fixed
@@ -56,7 +56,9 @@
                 - url 'cms:tag_index' tag.id as current_tag_url
 
                 - ifequal request.path current_tag_url
-                  - define "active" as tag_active_class
+                  - set_global_context "tag_active_class" "active"
+                - else
+                  - set_global_context "tag_active_class" ""
 
                 - for content_tag in content.tags.all
                   - if content_tag.id == tag.id
