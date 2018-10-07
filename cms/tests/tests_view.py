@@ -163,13 +163,13 @@ class WatchViewTest(MixinWatch, TestCase):
 #     url = 'cms/watch/{}/jw'
 #     contains = 'jwplayer'
 
-class WatchFlashViewTest(MixinWatch, TestCase):
-    def setUp(self):
-        login(self.client)
+# class WatchFlashViewTest(MixinWatch, TestCase):
+#     def setUp(self):
+#         login(self.client)
 
-    url_name = 'cms:watch_flash'
-    url = 'cms/watch/{}/flash'
-    contains = 'shockwave-flash'
+#     url_name = 'cms:watch_flash'
+#     url = 'cms/watch/{}/flash'
+#     contains = 'shockwave-flash'
 
 
 class MixinIndexTag():
