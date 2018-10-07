@@ -24,7 +24,7 @@
     %a.brand-logo.center#logo-container{href: "{% url 'cms:index' %}"}
       %img#front-page-logo{src: "{% static 'cms/logo.png' %}"}
   %li
-    %a.light-blue-text{href: "/"}
+    %a{href: "/"}
       %i.material-icons.left home
       Top
   - if user.is_authenticated
@@ -44,4 +44,4 @@
           %ul
             - for tag in tags
               %li
-                %a.light-blue-text{href: "{% url 'cms:tag_index' tag.id %}"} #{ tag.name }
+                %a{href: "{% url 'cms:tag_index' tag.id %}"} #{ tag.name }

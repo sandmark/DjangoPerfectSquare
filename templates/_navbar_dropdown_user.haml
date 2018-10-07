@@ -1,15 +1,15 @@
 %li
-  %a.light-blue-text{href: "{% url 'account_reset_password' %}"}
+  %a{href: "{% url 'account_reset_password' %}"}
     %i.material-icons.left vpn_key
     パスワードの変更
 %li.divider
 %li
-  %a.light-blue-text.modal-trigger{href: "#logout-modal"}
+  %a.modal-trigger{href: "#logout-modal"}
     %i.material-icons.left clear_all
     ログアウト
 - if user.is_staff
   %li.divider
   %li
-    %a.light-blue-text{href: '/admin'}
+    %a{href: '/admin'}
       %i.material-icons.left build
       Admin
