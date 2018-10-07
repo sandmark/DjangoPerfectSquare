@@ -23,6 +23,10 @@
   %li.logo
     %a.brand-logo.center#logo-container{href: "{% url 'cms:index' %}"}
       %img#front-page-logo{src: "{% static 'cms/logo.png' %}"}
+  %li
+    %a.light-blue-text{href: "/"}
+      %i.material-icons.left home
+      Top
   - if user.is_authenticated
     %ul.collapsible.collapsible-accordion
       %li
