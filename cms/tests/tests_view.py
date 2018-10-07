@@ -155,13 +155,13 @@ class WatchViewTest(MixinWatch, TestCase):
     url = 'cms/watch/{}'
     contains = '<video'
 
-class WatchJwViewTest(MixinWatch, TestCase):
-    def setUp(self):
-        login(self.client)
+# class WatchJwViewTest(MixinWatch, TestCase):
+#     def setUp(self):
+#         login(self.client)
 
-    url_name = 'cms:watch_jw'
-    url = 'cms/watch/{}/jw'
-    contains = 'jwplayer'
+#     url_name = 'cms:watch_jw'
+#     url = 'cms/watch/{}/jw'
+#     contains = 'jwplayer'
 
 class WatchFlashViewTest(MixinWatch, TestCase):
     def setUp(self):
