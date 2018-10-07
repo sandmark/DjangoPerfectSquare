@@ -10,14 +10,14 @@ from .models import Content, Tag, Check
 
 class IndexView(ListView):
     model = Content
-    paginate_by = 10
+    paginate_by = 9
     ordering = ['-created']
     context_object_name = 'contents'
     template_name = 'cms/index.haml'
 
 class TagIndexView(ListView):
     model = Content
-    paginate_by = 10
+    paginate_by = 9
     context_object_name = 'contents'
     template_name = 'cms/tag_index.haml'
 

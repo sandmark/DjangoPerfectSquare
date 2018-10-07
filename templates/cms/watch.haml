@@ -5,29 +5,45 @@
 - block title
   #{ content.title } - PerfectSquare
 
+- block pagetitle
+  #{ content.title }
+
 - block content
-  .card.bg-light.col-xs-8
-    .card-header
-      %ul.nav.nav-tabs.card-header-tabs
-        - block navlink
-    .card-body
-      %h5
-        - user_checked user content as checked
-        - if checked
-          - format_date checked as date
-          %form{method: "POST", style: "display:inline;", action: "{% url 'cms:uncheck' content.id %}"}
-            {% csrf_token %}
-            %input{type: "hidden", name: "next", value: "#{ request.path }"}
-            %button.btn.btn-sm.fa.fa-check-circle{type: "submit", data-toggle: "tooltip", data-placement: "left", title: "#{date}に視聴しました"}
-        - else
-          %form{method: "POST", style: "display: inline;", action: "{% url 'cms:check' content.id %}"}
-            {% csrf_token %}
-            %input{type: "hidden", name: "next", value: "#{ request.path }"}
-            %button.btn.btn-sm.fa.fa-circle{type: "submit", data-toggle: "tooltip", data-placement: "left", title: "クリックで視聴済み"}
-        #{ content.title }
-      %h6.card-title
-        - for tag in content.tags.all
-          %span.badge.badge-secondary #{ tag.name }
-      - block jwplayer
-        .embed-responsive.embed-responsive-16by9
-          - block player
+  .row
+    .col.s12
+      .card
+        .card-content
+          .row
+            - for tag in content.tags.all
+              %span.tag
+                %a{href: "{% url 'cms:tag_index' tag.id %}"}= tag.name
+          .row
+            .center
+              - block player
+
+-# - block content
+-#   .card.bg-light.col-xs-8
+-#     .card-header
+-#       %ul.nav.nav-tabs.card-header-tabs
+-#         - block navlink
+-#     .card-body
+-#       %h5
+-#         - user_checked user content as checked
+-#         - if checked
+-#           - format_date checked as date
+-#           %form{method: "POST", style: "display:inline;", action: "{% url 'cms:uncheck' content.id %}"}
+-#             {% csrf_token %}
+-#             %input{type: "hidden", name: "next", value: "#{ request.path }"}
+-#             %button.btn.btn-sm.fa.fa-check-circle{type: "submit", data-toggle: "tooltip", data-placement: "left", title: "#{date}に視聴しました"}
+-#         - else
+-#           %form{method: "POST", style: "display: inline;", action: "{% url 'cms:check' content.id %}"}
+-#             {% csrf_token %}
+-#             %input{type: "hidden", name: "next", value: "#{ request.path }"}
+-#             %button.btn.btn-sm.fa.fa-circle{type: "submit", data-toggle: "tooltip", data-placement: "left", title: "クリックで視聴済み"}
+-#         #{ content.title }
+-#       %h6.card-title
+-#         - for tag in content.tags.all
+-#           %span.badge.badge-secondary #{ tag.name }
+-#       - block jwplayer
+-#         .embed-responsive.embed-responsive-16by9
+-#           - block player

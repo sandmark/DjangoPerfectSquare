@@ -1,8 +1,10 @@
 - extends "layout.haml"
 
-- block alert
-  - if contents|length == 0
-    .alert.alert-primary{role: "alert"} アップロードされたものがありません。
+- block pagetitle
+  Index
 
 - block content
-  - include "cms/_contents.haml"
+  - if contents|length == 0
+    %p アップロードされたものがありません。
+  - else
+    - include "cms/_contents.haml"
