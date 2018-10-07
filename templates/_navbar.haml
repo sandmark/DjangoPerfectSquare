@@ -1,3 +1,6 @@
+- load all_tags
+- get_all_tags as tags
+
 / Dropdown Structure
 - if user.is_authenticated
   / Modal Structure
@@ -10,10 +13,14 @@
         %button.btn.waves-effect.waves-brown{type: "submit"} はい
         %a.modal-close.btn-flat{href: "#!"} いいえ
 
-  %ul.dropdown-content#user-dropdown-sidenav
-    - include "_navbar_dropdown_user.haml"
   %ul.dropdown-content#user-dropdown-navbar
     - include "_navbar_dropdown_user.haml"
+
+  %ul.dropdown-content#tags-dropdown-navbar
+    - for tag in tags
+      %li
+        %a.light-blue-text{href: "{% url 'cms:tag_index' tag.id %}"}
+          #{ tag.name }
 
 %nav.brown.lighten-1{role: "navigation"}
   .nav-wrapper.container
@@ -21,15 +28,32 @@
     %ul.right.hide-on-med-and-down
       - if user.is_authenticated
         %li
+          %a.dropdown-trigger{href: "#!", data-target: "tags-dropdown-navbar"}
+            %i.material-icons attachment
+
+        %li
           %a.dropdown-trigger{href: "#!", data-target: "user-dropdown-navbar"}
             %i.material-icons.left person
 
     / Navbar mobile
     %ul#nav-mobile.sidenav
       - if user.is_authenticated
-        %li
-          %a.dropdown-trigger{href: "#!", data-target: "user-dropdown-sidenav"}
-            %i.material-icons.left person
-            #{ user.username }
+        %ul.collapsible.collapsible-accordion
+          %li
+            %a.collapsible-header
+              %i.material-icons.left person
+              #{ user.username }
+            .collapsible-body
+              %ul
+                - include "_navbar_dropdown_user.haml"
+          %li
+            %a.collapsible-header
+              %i.material-icons attachment
+              Tags
+            .collapsible-body
+              %ul
+                - for tag in tags
+                  %li
+                    %a.light-blue-text{href: "{% url 'cms:tag_index' tag.id %}"} #{ tag.name }
     %a.sidenav-trigger{"data-target": "nav-mobile", href: "#"}
       %i.material-icons menu
