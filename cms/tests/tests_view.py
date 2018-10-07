@@ -232,11 +232,12 @@ class MixinIndexTag():
     def test_pagination_shows_at_most_three_pages(self):
         """
         ページリンクは最大5つまでしか表示しない。
+        上下のページネーションを合わせて10のリンクが生成される。
         """
         url = reverse(self.url, kwargs=self.params)
         self.make_contents(100)
         r = self.client.get(url, {'page': 2})
-        self.assertContains(r, 'page-item', 5)
+        self.assertContains(r, 'page-item', 5*2)
 
 class IndexViewTest(MixinIndexTag, TestCase):
     def setUp(self):

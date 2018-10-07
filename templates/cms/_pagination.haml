@@ -8,22 +8,22 @@
 
   %ul.pagination.center
     %li{class: "waves-effect #{ previous }"}
-      %a{href: "?page=1"}
+      %a.page-item{href: "?page=1"}
         %i.material-icons chevron_left
 
     - if page_obj.has_previous
       %li.waves-effect
-        %a{href: "?page=#{ page_obj.previous_page_number }"}
+        %a.page-item{href: "?page=#{ page_obj.previous_page_number }"}
           #{ page_obj.previous_page_number }
 
     %li.active
-      %a #{ page_obj.number }
+      %a.page-item #{ page_obj.number }
 
     - if page_obj.has_next
       %li.waves-effect
-        %a{href: "?page=#{ page_obj.next_page_number }"}
+        %a.page-item{href: "?page=#{ page_obj.next_page_number }"}
           #{ page_obj.next_page_number }
 
     %li{class: "waves-effect #{next}"}
-      %a{href: "?page=#{ page_obj.paginator.num_pages }"}
+      %a.page-item{href: "?page=#{ page_obj.paginator.num_pages }"}
         %i.material-icons chevron_right
