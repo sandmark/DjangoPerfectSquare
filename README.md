@@ -64,4 +64,8 @@ heroku へのデプロイに必要なファイルを用意。
 ## 0.1.0
 heroku にデプロイ。
 
+# Special Thanks
+- [kiloji](kiloji) font is authored by [kironono](http://ola.kironono.com/).
+
 [django-hamlpy]: https://github.com/nyaruka/django-hamlpy
+[kiloji]: http://ola.kironono.com/entry/fonts-kiloji
