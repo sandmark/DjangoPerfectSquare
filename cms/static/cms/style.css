@@ -6,6 +6,18 @@
  * Made By MaterializeCSS.com
  */
 
+/* Fonts */
+@font-face {
+    font-family: "Kiloji Font";
+    font-style: normal;
+    src: url("./fonts/kiloji.ttf") format("truetype");
+    font-display: swap;
+}
+
+html {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue", "Kiloji Font", sans-serif;
+}
+
 .icon-block {
     padding: 0 15px;
 }
@@ -47,7 +59,7 @@ main>.container, body>.page, footer>.container, .top-nav>.container, #index-bann
     width: 100%;
 }
 
-/* logo */
+/* SideNav */
 ul.sidenav.sidenav-fixed li.logo {
     text-align: center;
     margin-top: 32px;
@@ -85,7 +97,7 @@ nav.top-nav {
 
 nav.top-nav h1.header {
     margin: 0;
-    padding-top: 22px;
+    padding-top: 16px;
 }
 
 .header {
