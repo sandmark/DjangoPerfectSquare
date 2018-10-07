@@ -134,6 +134,10 @@ ul.sidenav.sidenav-fixed ul.collapsible-accordion .collapsible-body li a {
     padding: 0 37.5px 0 45px;
 }
 
+.sidenav .collapsible-body>ul:not(.collapsible)>li.active,.sidenav.sidenav-fixed .collapsible-body>ul:not(.collapsible)>li.active {
+    background-color: #5c6bc0;
+}
+
 /* Pagination */
 .pagination li a {
     color: #3f51b5;

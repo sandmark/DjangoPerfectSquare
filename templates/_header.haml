@@ -36,12 +36,15 @@
         .collapsible-body
           %ul
             - include "_navbar_dropdown_user.haml"
-      %li
-        %a.collapsible-header
-          %i.material-icons attachment
-          Tags
-        .collapsible-body
-          %ul
-            - for tag in tags
-              %li
-                %a{href: "{% url 'cms:tag_index' tag.id %}"} #{ tag.name }
+        %li{class: "{% if 'tags' in request.path %}active{% endif %}"}
+          %a.collapsible-header
+            %i.material-icons attachment
+            Tags
+          .collapsible-body
+            %ul
+              - for tag in tags
+                - url 'cms:tag_index' tag.id as current_tag
+                %li{class: "{% ifequal request.path current_tag %}active{% endifequal %}"}
+                  %a{href: "{% url 'cms:tag_index' tag.id %}"}
+                    #{ tag.name }
+
