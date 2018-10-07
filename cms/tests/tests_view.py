@@ -279,7 +279,7 @@ class IndexViewTest(MixinIndexTag, TestCase):
         Contentは最近作られたものから表示される。
         """
         url = reverse(self.url, kwargs=self.params)
-        for i in range(10):
+        for i in range(9):
             Content(title=str(i), filepath=i).save()
         r = self.client.get(url)
         contents = r.context['contents']
