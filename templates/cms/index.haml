@@ -1,0 +1,10 @@
+- extends "layout.haml"
+
+- block pagetitle
+  Index
+
+- block content
+  - if contents|length == 0
+    %p アップロードされたものがありません。
+  - else
+    - include "cms/_contents.haml"

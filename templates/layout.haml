@@ -1,0 +1,55 @@
+{% load static %}
+!!!
+%html{lang: "en"}
+  %head
+    %meta{content: "text/html; charset=UTF-8", "http-equiv": "Content-Type"}/
+    %meta{content: "width=device-width, initial-scale=1, maximum-scale=1.0", name: "viewport"}/
+    %title
+      - block title
+        PerfectSquare
+    / CSS
+    %link{href: "https://fonts.googleapis.com/icon?family=Material+Icons", rel: "stylesheet"}/
+    %link{href: "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css", media: "screen,projection", rel: "stylesheet", type: "text/css"}/
+    %link{href: "{% static 'cms/style.css' %}", media: "screen,projection", rel: "stylesheet", type: "text/css"}/
+    %link{href: "{% static 'cms/favicon.ico' %}", rel: "shortcut icon", type: "image/png"}/
+  %body
+    / Navigation
+    %header
+      %nav.top-nav
+        .container
+          .nav-wrapper
+            .row
+              .col.s12.m10.offset-m1
+                %h1.header.indigo-text.text-lighten-1
+                  - block pagetitle
+                    ぱふぇ
+      - include '_header.haml'
+    %main
+      #index-banner.section.no-pad-bot
+        .container
+          .row
+            .col.s12.m10.offset-m1
+              - block content
+    %footer
+      .container
+        .row
+          .col.s12.m10.offset-m1
+            .footer-copyright
+              %span.grey-text.grey-text-darken-4
+                &copy; 2017-2018
+                %a{href: "https://github.com/sandmark"} sandmark
+                , All rights reserved.
+              %span.right
+                %a{href: "https://github.com/sandmark/DjangoPerfectSquare/blob/master/LICENSE"}
+                  MIT License
+    / Scripts
+    %script{src: "https://code.jquery.com/jquery-2.1.1.min.js"}
+    %script{src: "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"}
+    %script{src: "{% static 'cms/init.js' %}"}
+    %script{src: "{% static 'cms/layout.js' %}"}
+
+    / Toast
+    - if messages
+      %script
+        - for message in messages
+          M.toast({html: "#{ message }", class: "rounded"});

@@ -1,0 +1,48 @@
+{% extends 'layout.haml' %}
+
+{% block alert %}
+<div class="alert alert-secondary" role="alert">
+  すでにアカウントをお持ちの場合、こちらから<a href="{{ login_url }}" >ログイン</a>してください。
+</div>
+{% endblock %}
+
+{% block content %}
+<h3>ユーザー登録</h3>
+
+<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+  {% csrf_token %}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_value}}" value="{{ redirect_field_value}}" >
+  {% endif %}
+
+  <div class="form-group row" >
+    <label for="id_username" class="col-sm-3 col-form-label" >ユーザー名</label>
+    <div class="col-sm-9" >
+      <input type="text" class="form-control" name="username" placeholder="ユーザー名" autofocus="autofocus" required id="id_username" >
+    </div>
+  </div>
+
+  <div class="form-group row" >
+    <label for="id_email" class="col-sm-3 col-form-label" >メールアドレス（オプション）</label>
+    <div class="col-sm-9" >
+      <input type="email" class="form-control" name="email" value="{{ form.email.value }}" placeholder="メールアドレス" id="id_email" >
+    </div>
+  </div>
+
+  <div class="form-group row" >
+    <label for="id_password1" class="col-sm-3 col-form-label" >パスワード</label>
+    <div class="col-sm-9" >
+      <input type="password" class="form-control" name="password1" placeholder="パスワード" required id="id_password1" >
+    </div>
+  </div>
+
+  <div class="form-group row" >
+    <label for="id_password2" class="col-sm-3 col-form-label" >パスワード（確認）</label>
+    <div class="col-sm-9" >
+      <input type="password" class="form-control" name="password2" placeholder="パスワード（確認）" required id="id_password2" >
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-default" >登録</button>
+</form>
+{% endblock content %}

@@ -1,0 +1,34 @@
+- load is_playable
+- load check_tag
+- load static
+
+- include "cms/_pagination.haml"
+
+.row.flex
+  - for content in contents
+    - user_checked request.user content as checked
+    .col.s12.m4.l4.margin-clear
+      .card
+        .card-image
+          %img{src: "{% static 'cms/no_image.png' %}"}
+          %span.card-title
+            #{ content.title }
+        .card-content
+          - for tag in content.tags.all
+            .row
+              %span.tag
+                %a{href: "{% url 'cms:tag_index' tag.id %}"}
+                  #{ tag.name }
+        .card-action
+          - is_playable content as playable
+          - if playable
+            %a.right{href: "{% url 'cms:watch' content.id %}"}
+              %i.material-icons ondemand_video
+            %a.right{href: "#{ content.filepath }"}
+              %i.material-icons file_download
+
+          - else
+            %a.right{href: "#{ content.filepath }"}
+              %i.material-icons file_download
+
+- include "cms/_pagination.haml"

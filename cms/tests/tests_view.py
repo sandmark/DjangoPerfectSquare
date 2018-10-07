@@ -8,18 +8,18 @@ from .helpers import login, create_content
 class LayoutViewTest(TestCase):
     def test_show_admin_menu_only_admin_user(self):
         """
-        管理メニューはAdminにのみ表示される。
+        AdminメニューはAdminにのみ表示される。
         """
         login(self.client)
         r = self.client.get('/')
-        self.assertNotContains(r, "管理")
+        self.assertNotContains(r, "Admin")
 
         u = User(username='admin', is_staff=True)
         u.set_password('admin')
         u.save()
         self.client.login(username=u.username, password='admin')
         r = self.client.get('/')
-        self.assertContains(r, '管理')
+        self.assertContains(r, 'Admin')
 
 class MixinCheck():
     @property
@@ -155,21 +155,21 @@ class WatchViewTest(MixinWatch, TestCase):
     url = 'cms/watch/{}'
     contains = '<video'
 
-class WatchJwViewTest(MixinWatch, TestCase):
-    def setUp(self):
-        login(self.client)
+# class WatchJwViewTest(MixinWatch, TestCase):
+#     def setUp(self):
+#         login(self.client)
 
-    url_name = 'cms:watch_jw'
-    url = 'cms/watch/{}/jw'
-    contains = 'jwplayer'
+#     url_name = 'cms:watch_jw'
+#     url = 'cms/watch/{}/jw'
+#     contains = 'jwplayer'
 
-class WatchFlashViewTest(MixinWatch, TestCase):
-    def setUp(self):
-        login(self.client)
+# class WatchFlashViewTest(MixinWatch, TestCase):
+#     def setUp(self):
+#         login(self.client)
 
-    url_name = 'cms:watch_flash'
-    url = 'cms/watch/{}/flash'
-    contains = 'shockwave-flash'
+#     url_name = 'cms:watch_flash'
+#     url = 'cms/watch/{}/flash'
+#     contains = 'shockwave-flash'
 
 
 class MixinIndexTag():
@@ -221,22 +221,23 @@ class MixinIndexTag():
 
     def test_contents_paginated_by_ten(self):
         """
-        Contentは10個ずつページネーションされる。
+        Contentは9個ずつページネーションされる。
         """
         url = reverse(self.url, kwargs=self.params)
         self.make_contents(20)
         r = self.client.get(url)
         contents = r.context['contents']
-        self.assertEqual(len(contents), 10)
+        self.assertEqual(len(contents), 9)
 
     def test_pagination_shows_at_most_three_pages(self):
         """
         ページリンクは最大5つまでしか表示しない。
+        上下のページネーションを合わせて10のリンクが生成される。
         """
         url = reverse(self.url, kwargs=self.params)
         self.make_contents(100)
         r = self.client.get(url, {'page': 2})
-        self.assertContains(r, 'page-item', 5)
+        self.assertContains(r, 'page-item', 5*2)
 
 class IndexViewTest(MixinIndexTag, TestCase):
     def setUp(self):
@@ -278,7 +279,7 @@ class IndexViewTest(MixinIndexTag, TestCase):
         Contentは最近作られたものから表示される。
         """
         url = reverse(self.url, kwargs=self.params)
-        for i in range(10):
+        for i in range(9):
             Content(title=str(i), filepath=i).save()
         r = self.client.get(url)
         contents = r.context['contents']

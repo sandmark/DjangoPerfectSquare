@@ -3,6 +3,11 @@
 
 # CHANGELOG
 
+## 1.1.0
+- CSS テンプレートを [materialize](materialize) に変更。
+- [きろ字](kiloji)フォントをインストール。
+- MIT ライセンスを採用。
+
 ## 1.0.2
 - Content を削除したときに S3 上のファイルも削除されるように変更。
 
@@ -64,4 +69,9 @@ heroku へのデプロイに必要なファイルを用意。
 ## 0.1.0
 heroku にデプロイ。
 
+# Special Thanks
+- [kiloji](kiloji) font is authored by [kironono](http://ola.kironono.com/).
+
 [django-hamlpy]: https://github.com/nyaruka/django-hamlpy
+[kiloji]: http://ola.kironono.com/entry/fonts-kiloji
+[materialize]: http://materializecss.com/
