@@ -8,18 +8,18 @@ from .helpers import login, create_content
 class LayoutViewTest(TestCase):
     def test_show_admin_menu_only_admin_user(self):
         """
-        管理メニューはAdminにのみ表示される。
+        AdminメニューはAdminにのみ表示される。
         """
         login(self.client)
         r = self.client.get('/')
-        self.assertNotContains(r, "管理")
+        self.assertNotContains(r, "Admin")
 
         u = User(username='admin', is_staff=True)
         u.set_password('admin')
         u.save()
         self.client.login(username=u.username, password='admin')
         r = self.client.get('/')
-        self.assertContains(r, '管理')
+        self.assertContains(r, 'Admin')
 
 class MixinCheck():
     @property
