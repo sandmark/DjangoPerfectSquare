@@ -51,7 +51,7 @@ main>.container, body>.page, footer>.container, .top-nav>.container, #index-bann
 ul.sidenav.sidenav-fixed li.logo {
     text-align: center;
     margin-top: 32px;
-    margin-bottom: 136px;
+    margin-bottom: 80px;
 }
 
 #logo-container {
