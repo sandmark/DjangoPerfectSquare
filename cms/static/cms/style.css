@@ -13,6 +13,91 @@
 	  font-size: inherit;
 }
 
+/* SideNav padding */
+header, main, footer {
+    padding-left: 300px;
+}
+
+@media only screen and (max-width: 992px) {
+    header, main, footer {
+        padding-left: 0;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    a.sidenav-trigger.top-nav {
+        left: 0;
+    }
+}
+
+a.sidenav-trigger.top-nav {
+    position: absolute;
+    text-align: center;
+    height: 48px;
+    width: 48px;
+    top: 28px;
+    float: none;
+    margin-left: 1.5rem;
+    font-size: 36px;
+    z-index: 2;
+}
+
+/* container width */
+main>.container, body>.page, footer>.container, .top-nav>.container, #index-banner>.container {
+    width: 100%;
+}
+
+/* logo */
+ul.sidenav.sidenav-fixed li.logo {
+    text-align: center;
+    margin-top: 32px;
+    margin-bottom: 136px;
+}
+
+#logo-container {
+    height: 57px;
+    margin-bottom: 32px;
+    pointer-events: none;
+}
+
+#front-page-logo {
+    display: inline-block;
+    pointer-events: none;
+}
+
+/* NavBar */
+nav {
+    width: 100%;
+}
+
+@media only screen and (max-width: 992px) {
+    nav .nav-wrapper {
+        text-align: center;
+    }
+}
+
+nav.top-nav {
+    height: 110px;
+    box-shadow: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+    background-color: transparent;
+}
+
+nav.top-nav h1.header {
+    margin: 0;
+    padding-top: 22px;
+}
+
+.header {
+    font-weight: 300;
+}
+
+h1 {
+    font-size: 4.2rem;
+    line-height: 110%;
+    margin: 2.0rem 0 1.68rem 0;
+}
+
 /* Fixed Footer */
 body {
     display: flex;
@@ -22,14 +107,6 @@ body {
 
 main {
     flex: 1 0 auto;
-}
-
-.waves-effect.waves-brown {
-    background-color: rgba(121, 85, 72, 0.9);
-}
-
-.waves-effect.waves-brown:hover {
-    background-color: rgba(121, 85, 72, 0.65)
 }
 
 a.dropdown-trigger:focus {

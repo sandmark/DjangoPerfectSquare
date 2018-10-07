@@ -11,22 +11,26 @@
     %link{href: "https://fonts.googleapis.com/icon?family=Material+Icons", rel: "stylesheet"}/
     %link{href: "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css", media: "screen,projection", rel: "stylesheet", type: "text/css"}/
     %link{href: "{% static 'cms/style.css' %}", media: "screen,projection", rel: "stylesheet", type: "text/css"}/
+    %link{href: "{% static 'cms/favicon.ico' %}", rel: "shortcut icon", type: "image/png"}/
   %body
     / Navigation
     %header
-      - include '_navbar.haml'
+      - include '_header.haml'
     %main
       #index-banner.section.no-pad-bot
         .container
-          - block content
-    %footer.footer-copyright
+          .row
+            .col.s12.m10.offset-m1
+              - block content
+    %footer
       .container
         .row
-          .right
-            %span.orange-text.text-darken-3
-              2017 - 2018
-              %a.orange-text.text-darken-4{href: "https://github.com/sandmark"} &copy;sandmark
-              All rights reserved.
+          .col.s12.m10.offset-m1
+            .footer-copyright
+              %span.grey-text.grey-text-darken-4
+                &copy; 2017-2018
+                %a{href: "https://github.com/sandmark"} sandmark
+                , All rights reserved.
     / Scripts
     %script{src: "https://code.jquery.com/jquery-2.1.1.min.js"}
     %script{src: "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"}
