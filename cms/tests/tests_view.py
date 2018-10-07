@@ -221,13 +221,13 @@ class MixinIndexTag():
 
     def test_contents_paginated_by_ten(self):
         """
-        Contentは10個ずつページネーションされる。
+        Contentは9個ずつページネーションされる。
         """
         url = reverse(self.url, kwargs=self.params)
         self.make_contents(20)
         r = self.client.get(url)
         contents = r.context['contents']
-        self.assertEqual(len(contents), 10)
+        self.assertEqual(len(contents), 9)
 
     def test_pagination_shows_at_most_three_pages(self):
         """
