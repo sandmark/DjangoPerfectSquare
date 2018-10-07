@@ -24,6 +24,9 @@
           - if playable
             %a.right{href: "{% url 'cms:watch' content.id %}"}
               %i.material-icons ondemand_video
+            %a.right{href: "#{ content.filepath }"}
+              %i.material-icons file_download
+
           - else
             %a.right{href: "#{ content.filepath }"}
               %i.material-icons file_download
