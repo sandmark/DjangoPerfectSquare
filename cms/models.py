@@ -54,30 +54,11 @@ class Check(models.Model):
 
 from django.db.models.signals import post_delete
 from django.dispatch.dispatcher import receiver
-import urllib
-from boto3.session import Session
-from botocore.exceptions import ClientError
-from django.conf import settings
 
-def is_s3_exists(s3, bucket_name, key):
-    try:
-        s3.Object(bucket_name, key).load()
-    except ClientError as e:
-        if e.response['Error']['Code'] == '404':
-            return False
-        raise e
-    else:
-        return True
+from .utils import uri2key, is_key_exists, s3_delete_key
 
 @receiver(post_delete, sender=Content)
 def content_delete_file_from_s3(sender, instance, **kwargs):
-    # Parse URI to S3Key
-    parts = urllib.parse.urlparse(instance.filepath)[2].split('/')[2:]
-    key = '/'.join(parts)
-    if key:
-        session = Session(aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                          aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-                          region_name=settings.S3DIRECT_REGION)
-        s3 = session.resource('s3')
-        if is_s3_exists(s3, settings.AWS_STORAGE_BUCKET_NAME, key):
-            s3.Object(settings.AWS_STORAGE_BUCKET_NAME, key).delete()
+    key = uri2key(instance.filepath)
+    if key and is_key_exists(key):
+        s3_delete_key(key)
