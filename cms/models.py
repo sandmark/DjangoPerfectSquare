@@ -34,24 +34,6 @@ class Check(models.Model):
     content = models.ForeignKey(Content, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
 
-# Receive the pre_delete signal and delete the file associated with the model instance.
-# !! S3Direct
-#      while s3direct is activated, the `filepath` attribute has been changed to
-#      `str` object so these code would occur an exception named
-#      AttributeError('str' object has no attribute 'delete').
-#
-# from django.db.models.signals import pre_delete
-# from django.dispatch.dispatcher import receiver
-
-# @receiver(pre_delete, sender=Content)
-# def content_delete(sender, instance, **kwargs):
-#     if instance.filepath:
-#         instance.filepath.delete(False)
-
-# So these code below delete S3 file intended by Content.filepath
-# when Content was deleted, however,
-# I still want to solve this problem smarter than this.
-
 from django.db.models.signals import post_delete
 from django.dispatch.dispatcher import receiver
 
@@ -59,6 +41,10 @@ from .utils import uri2key, is_key_exists, s3_delete_key
 
 @receiver(post_delete, sender=Content)
 def content_delete_file_from_s3(sender, instance, **kwargs):
-    key = uri2key(instance.filepath)
-    if key and is_key_exists(key):
-        s3_delete_key(key)
+    """
+    filepathとthumbがS3上に存在する場合、Contentレコードが削除されたあと同様に削除する。
+    """
+    for uri in [instance.filepath, instance.thumb]:
+        key = uri2key(uri)
+        if key and is_key_exists(key):
+            s3_delete_key(key)
