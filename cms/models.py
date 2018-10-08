@@ -34,10 +34,33 @@ class Check(models.Model):
     content = models.ForeignKey(Content, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
 
-from django.db.models.signals import post_delete
+import os
+import subprocess
+import urllib
+
+from django.db.models.signals import post_delete, post_save
 from django.dispatch.dispatcher import receiver
 
-from .utils import uri2key, is_key_exists, s3_delete_key
+from .utils import uri2key, is_key_exists, s3_delete_key, s3_upload_thumbnail, make_hash
+
+@receiver(post_save, sender=Content)
+def content_generate_thumbnail(sender, instance, created, **kwargs):
+    """
+    Contentが作成されるとき、filepathの拡張子が.mp4であり、
+    かつthumbが空である場合にサムネイルを自動生成する。
+      10秒の位置で320x240のサムネイルを作成する場合:
+        ffmpeg -i #{VIDEO}.mp4 -ss 10 -vframes 1 -f image2 -s 320x240 #{VIDEO}.jpg
+    """
+    if created and instance.filepath and instance.filepath.endswith('mp4') and not instance.thumb:
+        thumb_hash = make_hash(instance.title)
+        thumb = '/tmp/thumb-{}.jpg'.format(thumb_hash)
+        fileurl = urllib.parse.quote(instance.filepath, safe=':/')
+        ffmpeg = 'ffmpeg -y -i "{filepath}" -ss 0 -vframes 1 -f image2 -s 320x240 {thumb}'
+        subprocess.call(ffmpeg.format(filepath=fileurl, thumb=thumb), shell=True)
+
+        if os.path.exists(thumb):
+            url = s3_upload_thumbnail(thumb)
+            instance.thumb = url
 
 @receiver(post_delete, sender=Content)
 def content_delete_file_from_s3(sender, instance, **kwargs):

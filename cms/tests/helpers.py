@@ -32,7 +32,7 @@ SESSION = Session(aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
 S3 = SESSION.resource('s3')
 BUCKET = S3.Bucket(BUCKET_NAME)
 BASE_KEY = 'test/'
-BASE_URL = 'https://' + REGION + '.amazonaws.com/' + BUCKET_NAME + '/'
+BASE_URL = 'https://s3-' + REGION + '.amazonaws.com/' + BUCKET_NAME + '/'
 
 def s3_key(filename):
     """
@@ -61,9 +61,11 @@ def s3_delete(filename):
 
 def s3_upload(filename):
     """
-    S3にファイルをアップロードする。
+    S3にファイルをアップロードする。その後ACLを書き換え、Publicに変更する。
     """
     key = s3_key(filename)
     s3_delete(filename)
     BUCKET.upload_file(filename, key)
+    acl = S3.ObjectAcl(BUCKET_NAME, key)
+    acl.put(ACL='public-read')
     return BASE_URL + key

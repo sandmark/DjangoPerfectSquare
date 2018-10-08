@@ -1,4 +1,6 @@
+import os
 import urllib
+import hashlib
 
 from boto3.session import Session
 from botocore.exceptions import ClientError
@@ -28,3 +30,20 @@ def is_key_exists(key):
 def s3_delete_key(key):
     s3 = connect_s3()
     s3.Object(settings.AWS_STORAGE_BUCKET_NAME, key).delete()
+
+def s3_upload_thumbnail(filename):
+    s3 = connect_s3()
+    key = 'thumbnails/' + os.path.basename(filename)
+    bucket = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME)
+    bucket.upload_file(filename, key)
+    acl = s3.ObjectAcl(settings.AWS_STORAGE_BUCKET_NAME, key)
+    acl.put(ACL='public-read')
+    return 'https://s3-{region}.amazonaws.com/{bucket}{key}'.format(
+        region=settings.S3DIRECT_REGION,
+        bucket=settings.AWS_STORAGE_BUCKET_NAME,
+        key=key)
+
+def make_hash(ustring):
+    h = hashlib.new('sha3-256')
+    h.update(ustring.encode('unicode-escape'))
+    return h.hexdigest()
