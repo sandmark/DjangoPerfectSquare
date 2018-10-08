@@ -8,8 +8,11 @@ from botocore.exceptions import ClientError
 from django.conf import settings
 
 def uri2key(uri):
-    parts = urllib.parse.urlparse(uri)[2].split('/')[2:]
-    return '/'.join(parts) if parts else ''
+    parts = urllib.parse.urlparse(uri)
+    path = parts.path
+    paths = path.split('/')
+    splited_keys = paths[2:]
+    return '/'.join(splited_keys) if splited_keys else ''
 
 def connect_s3():
     return Session(aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
