@@ -10,7 +10,10 @@
     .col.s12.m4.l4.margin-clear
       .card
         .card-image
-          %img{src: "{% static 'cms/no_image.png' %}"}
+          - if content.thumb == '0'
+            %img{src: "{% static 'cms/no_image.png' %}"}
+          - else
+            %img{src: "#{ content.thumb }"}
           %span.card-title
             #{ content.title }
         .card-content
