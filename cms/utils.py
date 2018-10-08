@@ -9,7 +9,7 @@ from django.conf import settings
 
 def uri2key(uri):
     parts = urllib.parse.urlparse(uri)
-    path = parts.path
+    path = str(parts.path)
     paths = path.split('/')
     splited_keys = paths[2:]
     return '/'.join(splited_keys) if splited_keys else ''
