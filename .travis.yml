@@ -1,6 +1,6 @@
 language: python
 python:
-  - '3.6'
+  - '3.6.6'
 branches:
   only:
     - master
@@ -14,6 +14,9 @@ deploy:
   on:
     repo: sandmark/DjangoPerfectSquare
   run:
-    - "python manage.py collectstatic --noinput"
     - "python manage.py migrate"
-script: "coverage run --source=. manage.py test"
+before_install:
+  - sudo add-apt-repository -y ppa:mc3man/trusty-media
+  - sudo apt-get -qq update
+  - sudo apt-get install -y ffmpeg
+script: "python -bb manage.py test"

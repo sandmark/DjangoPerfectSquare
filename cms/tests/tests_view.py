@@ -280,7 +280,8 @@ class IndexViewTest(MixinIndexTag, TestCase):
         """
         url = reverse(self.url, kwargs=self.params)
         for i in range(9):
-            Content(title=str(i), filepath=i).save()
+            name = str(i)
+            Content(title=name, filepath=name).save()
         r = self.client.get(url)
         contents = r.context['contents']
         for i, content in enumerate(reversed(contents)):
