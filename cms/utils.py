@@ -44,6 +44,5 @@ def s3_upload_thumbnail(filename):
         key=key)
 
 def make_hash(ustring):
-    h = hashlib.new('sha3-256')
-    h.update(ustring.encode('unicode-escape'))
-    return h.hexdigest()
+    return hashlib.sha224(ustring.encode('unicode-escape')).hexdigest()
+
