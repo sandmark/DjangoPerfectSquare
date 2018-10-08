@@ -7,9 +7,15 @@ from botocore.exceptions import ClientError
 
 from django.conf import settings
 
+def to_str(bytes_or_str):
+    if isinstance(bytes_or_str, bytes):
+        return bytes_or_str.decode()
+    else:
+        return bytes_or_str
+
 def uri2key(uri):
     parts = urllib.parse.urlparse(uri)
-    path = str(parts.path)
+    path = to_str(parts.path)
     paths = path.split('/')
     splited_keys = paths[2:]
     return '/'.join(splited_keys) if splited_keys else ''
