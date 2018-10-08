@@ -9,7 +9,7 @@ from django.conf import settings
 
 def uri2key(uri):
     parts = urllib.parse.urlparse(uri)[2].split('/')[2:]
-    return '/'.join(parts)
+    return '/'.join(parts) if parts else ''
 
 def connect_s3():
     return Session(aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
