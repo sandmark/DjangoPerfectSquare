@@ -19,7 +19,7 @@ class Content(models.Model):
     """コンテンツ"""
     title = models.CharField('タイトル', max_length=255, blank=False)
     filepath = S3DirectField(dest='square', unique=True)
-    thumb = S3DirectField(dest='thumbnails')
+    thumb = S3DirectField(dest='thumbnails', blank=True, default=False)
     created = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField(Tag)
     sites = models.ManyToManyField(Site)

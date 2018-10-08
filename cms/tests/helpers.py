@@ -14,7 +14,7 @@ def login(client):
     create_user()
     return client.login(username='test@example.com', password='test')
 
-def create_content(title='test', filepath='http://example.com/something.mp4'):
-    c = Content(title=title, filepath=filepath)
+def create_content(title='test', filepath='http://example.com/something.mp4', thumb=False):
+    c = Content(title=title, filepath=filepath, thumb=thumb)
     c.save()
     return c
