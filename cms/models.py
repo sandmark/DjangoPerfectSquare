@@ -56,7 +56,8 @@ def content_generate_thumbnail(sender, instance, created, **kwargs):
         thumb = '/tmp/thumb-{}.jpg'.format(thumb_hash)
         fileurl = urllib.parse.quote(instance.filepath, safe=':/')
         ffmpeg = 'ffmpeg -y -i "{filepath}" -ss 0 -vframes 1 -f image2 -s 320x240 {thumb}'
-        subprocess.call(ffmpeg.format(filepath=fileurl, thumb=thumb), shell=True)
+        subprocess.call(ffmpeg.format(filepath=fileurl, thumb=thumb),
+                        shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
         if os.path.exists(thumb):
             url = s3_upload_thumbnail(thumb)
