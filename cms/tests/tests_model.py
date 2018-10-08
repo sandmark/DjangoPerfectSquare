@@ -29,9 +29,6 @@ class ContentTest(TestCase):
         """
         dest = s3_upload(test_file)
 
-        url = urllib.parse.urlparse(dest)[2].split('/')[2:]
-        url = '/'.join(url)
-
         content = Content(title='delete_test', filepath=dest)
         content.save()
         content.delete()
