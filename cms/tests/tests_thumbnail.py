@@ -2,18 +2,25 @@ from django.test import TestCase
 from django.urls import reverse
 
 from ..models import Content
-from .helpers import login, create_content
+from .helpers import login, create_content, s3_upload, s3_delete, is_s3_exists
+
+test_file = 'cms/tests/test.mp4'
+test_thumbnail = 'cms/tests/test.jpg'
 
 class ThumbnailTest(TestCase):
     def setUp(self):
         login(self.client)
+
+    def tearDown(self):
+        s3_delete(test_file)
+        s3_delete(test_thumbnail)
 
     def test_show_noimage_if_empty(self):
         """
         Content.thumbに値がない（default: 0）場合、
         no_image.pngを表示する。
         """
-        c = create_content(title='test', filepath='test.mp4')
+        c = create_content(title='test', filepath='test.rar')
         self.assertEqual(Content.objects.count(), 1)
         self.assertFalse(c.thumb)
 
@@ -28,3 +35,27 @@ class ThumbnailTest(TestCase):
 
         r = self.client.get('/')
         self.assertContains(r, 'test.jpg')
+
+    def test_thumbnail_generate_not_mp4(self):
+        """
+        mp4ファイルでない場合はサムネイルを自動生成しない。
+        """
+        c = create_content(title='test', filepath='test.rar')
+        self.assertFalse(c.thumb)
+
+    def test_thumbnail_generate_mp4(self):
+        """
+        mp4ファイルである場合、サムネイルを自動生成する。
+        """
+        url = s3_upload(test_file)
+        c = create_content(title='test', filepath=url)
+        self.assertIn('.jpg', c.thumb)
+
+    def test_thumbnail_delete(self):
+        """
+        Contentが削除されたとき、サムネイルも削除される。
+        """
+        thumbnail_url = s3_upload(test_thumbnail)
+        c = create_content(title='test', thumb=thumbnail_url)
+        c.delete()
+        self.assertFalse(is_s3_exists(test_thumbnail))
