@@ -61,5 +61,7 @@ def s3_upload(filename):
     """
     S3にファイルをアップロードする。
     """
+    key = s3_key(filename)
     s3_delete(filename)
-    BUCKET.upload_file(filename, s3_key(filename))
+    BUCKET.upload_file(filename, key)
+    return key

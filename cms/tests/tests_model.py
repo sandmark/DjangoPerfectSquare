@@ -2,7 +2,7 @@ import urllib
 from django.test import TestCase
 
 from ..models import Content, Check
-from .helpers import create_content, create_user, is_s3_exists, s3_delete, s3_upload, s3_key
+from .helpers import create_content, create_user, is_s3_exists, s3_delete, s3_upload
 
 test_file = 'cms/tests/test.mp4'
 
@@ -24,8 +24,7 @@ class ContentTest(TestCase):
         """
         Contentレコードが削除されると同時にS3上にあるファイルも削除される。
         """
-        dest = s3_key(test_file)
-        s3_upload(test_file)
+        dest = s3_upload(test_file)
 
         url = urllib.parse.urlparse(dest)[2].split('/')[2:]
         url = '/'.join(url)
