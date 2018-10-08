@@ -18,3 +18,48 @@ def create_content(title='test', filepath='http://example.com/something.mp4', th
     c = Content(title=title, filepath=filepath, thumb=thumb)
     c.save()
     return c
+
+from django.conf import settings
+from boto3.session import Session
+from botocore.exceptions import ClientError
+import os
+
+REGION = settings.S3DIRECT_REGION
+BUCKET_NAME = settings.AWS_STORAGE_BUCKET_NAME
+SESSION = Session(aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                  aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                  region_name=REGION)
+S3 = SESSION.resource('s3')
+BUCKET = S3.Bucket(BUCKET_NAME)
+BASE_URL = 'https://' + REGION + '.amazonaws.com/' + BUCKET_NAME + '/test/'
+
+def is_s3_exists(url):
+    try:
+        S3.Object(BUCKET_NAME, url).load()
+    except ClientError as e:
+        if e.response['Error']['Code'] == '404':
+            return False
+        raise e
+    else:
+        return True
+
+def s3_key(filename):
+    """
+    テスト用のkeyを生成して返す。
+    """
+    return BASE_URL + os.path.basename(filename)
+
+def s3_delete(filename):
+    """
+    S3上からファイルを削除する。
+    """
+    key = s3_key(filename)
+    if is_s3_exists(key):
+        S3.Object(BUCKET_NAME, key).delete()
+
+def s3_upload(filename):
+    """
+    S3にファイルをアップロードする。
+    """
+    s3_delete(filename)
+    BUCKET.upload_file(filename, s3_key(filename))
