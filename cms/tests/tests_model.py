@@ -7,6 +7,9 @@ from .helpers import create_content, create_user, is_s3_exists, s3_delete, s3_up
 test_file = 'cms/tests/test.mp4'
 
 class ContentTest(TestCase):
+    def tearDown(self):
+        s3_delete(test_file)
+
     def test_if_content_check_deletion(self):
         """
         Contentが削除されたタイミングで
@@ -34,5 +37,3 @@ class ContentTest(TestCase):
         content.delete()
         existance = is_s3_exists(test_file)
         self.assertFalse(existance)
-
-        s3_delete(test_file)

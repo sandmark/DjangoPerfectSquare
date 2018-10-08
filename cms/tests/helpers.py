@@ -31,11 +31,19 @@ SESSION = Session(aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
                   region_name=REGION)
 S3 = SESSION.resource('s3')
 BUCKET = S3.Bucket(BUCKET_NAME)
-BASE_URL = 'https://' + REGION + '.amazonaws.com/' + BUCKET_NAME + '/test/'
+BASE_KEY = 'test/'
+BASE_URL = 'https://' + REGION + '.amazonaws.com/' + BUCKET_NAME + '/'
 
-def is_s3_exists(url):
+def s3_key(filename):
+    """
+    テスト用のkeyを生成して返す。
+    """
+    return BASE_KEY + os.path.basename(filename)
+
+def is_s3_exists(filename):
+    key = s3_key(filename)
     try:
-        S3.Object(BUCKET_NAME, url).load()
+        S3.Object(BUCKET_NAME, key).load()
     except ClientError as e:
         if e.response['Error']['Code'] == '404':
             return False
@@ -43,18 +51,12 @@ def is_s3_exists(url):
     else:
         return True
 
-def s3_key(filename):
-    """
-    テスト用のkeyを生成して返す。
-    """
-    return BASE_URL + os.path.basename(filename)
-
 def s3_delete(filename):
     """
     S3上からファイルを削除する。
     """
     key = s3_key(filename)
-    if is_s3_exists(key):
+    if is_s3_exists(filename):
         S3.Object(BUCKET_NAME, key).delete()
 
 def s3_upload(filename):
@@ -64,4 +66,4 @@ def s3_upload(filename):
     key = s3_key(filename)
     s3_delete(filename)
     BUCKET.upload_file(filename, key)
-    return key
+    return BASE_URL + key
