@@ -4,7 +4,7 @@ from django.test import TestCase
 from ..models import Content, Check
 from .helpers import create_content, create_user, is_s3_exists, s3_delete, s3_upload
 
-test_file = 'cms/tests/test.mp4'
+test_file = 'cms/tests/テスト ファイル.mp4'
 
 class ContentTest(TestCase):
     def tearDown(self):
