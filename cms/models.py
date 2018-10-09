@@ -1,9 +1,14 @@
+import os
+
 from django.db import models
 from s3direct.fields import S3DirectField
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 
-# Create your models here.
+from django.db.models.signals import post_delete, post_save
+from django.dispatch.dispatcher import receiver
+
+from .utils import uri2key, is_key_exists, s3_delete_key, s3_upload_thumbnail, generate_thumbnail
 
 
 class Tag(models.Model):
@@ -24,6 +29,17 @@ class Content(models.Model):
     tags = models.ManyToManyField(Tag)
     sites = models.ManyToManyField(Site)
 
+    def update_thumbnail(self):
+        """
+        filepathの拡張子が.mp4であり、かつthumbが空である場合にサムネイルを自動生成する。
+        """
+        if self.filepath and self.filepath.endswith('mp4'):
+            if self.thumb == 'false' or not self.thumb:
+                thumb = generate_thumbnail(self.title, self.filepath)
+                if os.path.exists(thumb):
+                    url = s3_upload_thumbnail(thumb)
+                    self.thumb = url
+
     def __str__(self):
         return self.title
 
@@ -34,34 +50,12 @@ class Check(models.Model):
     content = models.ForeignKey(Content, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
 
-import os
-import subprocess
-import urllib
-
-from django.db.models.signals import post_delete, post_save
-from django.dispatch.dispatcher import receiver
-
-from .utils import uri2key, is_key_exists, s3_delete_key, s3_upload_thumbnail
-
 @receiver(post_save, sender=Content)
-def content_generate_thumbnail(sender, instance, created, **kwargs):
+def content_generate_thumbnail(sender, instance, **kwargs):
     """
-    Contentが作成されるとき、filepathの拡張子が.mp4であり、
-    かつthumbが空である場合にサムネイルを自動生成する。
-      10秒の位置で320x240のサムネイルを作成する場合:
-        ffmpeg -i #{VIDEO}.mp4 -ss 10 -vframes 1 -f image2 -s 320x240 #{VIDEO}.jpg
+    Contentが保存されるときにupdate_thumbnail()を呼び出す。
     """
-    if created and instance.filepath and instance.filepath.endswith('mp4'):
-        if instance.thumb == 'false' or not instance.thumb:
-            thumb = '/tmp/thumb-{}.jpg'.format(instance.title)
-            fileurl = urllib.parse.quote(instance.filepath, safe=':/')
-            ffmpeg = 'ffmpeg -y -i "{filepath}" -ss 0 -vframes 1 -f image2 -s 320x240 {thumb}'
-            subprocess.call(ffmpeg.format(filepath=fileurl, thumb=thumb),
-                            shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-
-            if os.path.exists(thumb):
-                url = s3_upload_thumbnail(thumb)
-                instance.thumb = url
+    instance.update_thumbnail()
 
 @receiver(post_delete, sender=Content)
 def content_delete_file_from_s3(sender, instance, **kwargs):

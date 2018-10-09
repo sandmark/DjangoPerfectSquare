@@ -35,6 +35,13 @@ class WatchView(DetailView):
     model = Content
     context_object_name = 'content'
 
+    def get_object(self, queryset=None):
+        content = super(WatchView, self).get_object(queryset=queryset)
+        content.update_thumbnail()
+        content.save()
+        return content
+    
+
 class CheckBaseView(View):
     def redirect_to_next(self, request, default, *args, **kwargs):
         dest = request.POST['next'] if 'next' in request.POST else default

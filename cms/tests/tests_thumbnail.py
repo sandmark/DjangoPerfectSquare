@@ -15,6 +15,20 @@ class ThumbnailTest(TestCase):
         s3_delete(test_file)
         s3_delete(test_thumbnail)
 
+    def test_thumbnail_generate_on_watch(self):
+        """
+        cms:watchが実行されたときにthumbが空であった場合、
+        サムネイルを自動生成してS3にアップロードする。
+        """
+        url = s3_upload(test_file)
+        c = create_content(title='watch', filepath=url, thumb='false')
+        r = self.client.get(reverse('cms:index'))
+        self.assertContains(r, 'no_image.png')
+        self.client.get(reverse('cms:watch', kwargs={'pk': c.id}))
+        r = self.client.get(reverse('cms:index'))
+        self.assertNotContains(r, 'no_image.png')
+        self.assertContains(r, c.thumb)
+
     def test_show_noimage_if_empty(self):
         """
         Content.thumbに値がない（default: 0）場合、
