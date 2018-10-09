@@ -1,6 +1,8 @@
 from django.test import TestCase
 from django.urls import reverse
 
+import hashlib
+
 from ..models import Content
 from .helpers import login, create_content, s3_upload, s3_delete, is_s3_exists
 
@@ -83,9 +85,14 @@ class ThumbnailTest(TestCase):
         Contentが削除されたとき、自動生成されたサムネイルも削除される。
         """
         url = s3_upload(test_file)
-        c = create_content(title='thumb_generate', filepath=url)
+        title = 'thumb_generate'
+        title_hash = hashlib.sha1(title.encode('unicode-escape')).hexdigest()
+        thumb = 'thumb-{}.jpg'.format(title_hash)
+        c = create_content(title=title, filepath=url)
+
+        content = Content.objects.get(pk=c.id)
         self.assertEqual(Content.objects.count(), 1)
-        self.assertTrue(is_s3_exists(filename='thumb-thumb_generate.jpg', key='thumbnails'))
+        self.assertTrue(is_s3_exists(filename=thumb, key='thumbnails'))
         c.delete()
         self.assertEqual(Content.objects.count(), 0)
-        self.assertFalse(is_s3_exists(filename='thumb-thumb_generate.jpg', key='thumbnails'))
+        self.assertFalse(is_s3_exists(filename=thumb, key='thumbnails'))

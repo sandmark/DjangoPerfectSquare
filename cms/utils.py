@@ -13,7 +13,7 @@ def generate_thumbnail(title, filepath):
     10秒の位置で320x240のサムネイルを作成する場合:
       ffmpeg -i #{VIDEO}.mp4 -ss 10 -vframes 1 -f image2 -s 320x240 #{VIDEO}.jpg
     """
-    title_hash = hashlib.sha1(title).hexdigest()
+    title_hash = hashlib.sha1(title.encode('unicode-escape')).hexdigest()
     thumb = '/tmp/thumb-{}.jpg'.format(title_hash)
     fileurl = urllib.parse.quote(filepath, safe=':/')
     ffmpeg = 'ffmpeg -y -i "{filepath}" -ss 0 -vframes 1 -f image2 -s 320x240 {thumb}'.format(
