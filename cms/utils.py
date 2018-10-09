@@ -47,7 +47,7 @@ def s3_upload_thumbnail(filename):
     bucket.upload_file(filename, key)
     acl = s3.ObjectAcl(settings.AWS_STORAGE_BUCKET_NAME, key)
     acl.put(ACL='public-read')
-    return 'https://s3-{region}.amazonaws.com/{bucket}{key}'.format(
+    return 'https://s3-{region}.amazonaws.com/{bucket}/{key}'.format(
         region=settings.S3DIRECT_REGION,
         bucket=settings.AWS_STORAGE_BUCKET_NAME,
         key=key)

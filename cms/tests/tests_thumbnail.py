@@ -49,6 +49,7 @@ class ThumbnailTest(TestCase):
         """
         url = s3_upload(test_file)
         c = create_content(title='test', filepath=url)
+        self.assertEqual(Content.objects.count(), 1)
         self.assertIn('.jpg', c.thumb)
 
     def test_thumbnail_delete(self):
@@ -59,3 +60,15 @@ class ThumbnailTest(TestCase):
         c = create_content(title='test', thumb=thumbnail_url)
         c.delete()
         self.assertFalse(is_s3_exists(test_thumbnail))
+
+    def test_generated_thumbnail_delete(self):
+        """
+        Contentが削除されたとき、自動生成されたサムネイルも削除される。
+        """
+        url = s3_upload(test_file)
+        c = create_content(title='thumb_generate', filepath=url)
+        self.assertEqual(Content.objects.count(), 1)
+        self.assertTrue(is_s3_exists(filename='thumb-thumb_generate.jpg', key='thumbnails'))
+        c.delete()
+        self.assertEqual(Content.objects.count(), 0)
+        self.assertFalse(is_s3_exists(filename='thumb-thumb_generate.jpg', key='thumbnails'))
