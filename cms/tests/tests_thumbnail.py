@@ -4,8 +4,8 @@ from django.urls import reverse
 from ..models import Content
 from .helpers import login, create_content, s3_upload, s3_delete, is_s3_exists
 
-test_file = 'cms/tests/test.mp4'
-test_thumbnail = 'cms/tests/test.jpg'
+test_file = 'cms/tests/テスト ファイル.mp4'
+test_thumbnail = 'cms/tests/テスト ファイル.jpg'
 
 class ThumbnailTest(TestCase):
     def setUp(self):

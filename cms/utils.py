@@ -15,7 +15,7 @@ def generate_thumbnail(title, filepath):
     thumb = '/tmp/thumb-{}.jpg'.format(title)
     fileurl = urllib.parse.quote(filepath, safe=':/')
     ffmpeg = 'ffmpeg -y -i "{filepath}" -ss 0 -vframes 1 -f image2 -s 320x240 {thumb}'.format(
-        filepath=filepath, thumb=thumb
+        filepath=fileurl, thumb=thumb
     )
     subprocess.call(ffmpeg, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     return thumb
