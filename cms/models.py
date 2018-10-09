@@ -41,7 +41,7 @@ import urllib
 from django.db.models.signals import post_delete, post_save
 from django.dispatch.dispatcher import receiver
 
-from .utils import uri2key, is_key_exists, s3_delete_key, s3_upload_thumbnail, make_hash
+from .utils import uri2key, is_key_exists, s3_delete_key, s3_upload_thumbnail
 
 @receiver(post_save, sender=Content)
 def content_generate_thumbnail(sender, instance, created, **kwargs):
@@ -52,8 +52,7 @@ def content_generate_thumbnail(sender, instance, created, **kwargs):
         ffmpeg -i #{VIDEO}.mp4 -ss 10 -vframes 1 -f image2 -s 320x240 #{VIDEO}.jpg
     """
     if created and instance.filepath and instance.filepath.endswith('mp4') and not instance.thumb:
-        thumb_hash = make_hash(instance.title)
-        thumb = '/tmp/thumb-{}.jpg'.format(thumb_hash)
+        thumb = '/tmp/thumb-{}.jpg'.format(instance.title)
         fileurl = urllib.parse.quote(instance.filepath, safe=':/')
         ffmpeg = 'ffmpeg -y -i "{filepath}" -ss 0 -vframes 1 -f image2 -s 320x240 {thumb}'
         subprocess.call(ffmpeg.format(filepath=fileurl, thumb=thumb),

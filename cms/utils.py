@@ -1,6 +1,5 @@
 import os
 import urllib
-import hashlib
 
 from boto3.session import Session
 from botocore.exceptions import ClientError
@@ -15,7 +14,8 @@ def to_str(bytes_or_str):
 
 def uri2key(uri):
     parts = urllib.parse.urlparse(uri)
-    path = to_str(parts.path)
+    path = parts.path
+    path = to_str(path)
     paths = path.split('/')
     splited_keys = paths[2:]
     return '/'.join(splited_keys) if splited_keys else ''
@@ -47,11 +47,7 @@ def s3_upload_thumbnail(filename):
     bucket.upload_file(filename, key)
     acl = s3.ObjectAcl(settings.AWS_STORAGE_BUCKET_NAME, key)
     acl.put(ACL='public-read')
-    return 'https://s3-{region}.amazonaws.com/{bucket}{key}'.format(
+    return 'https://s3-{region}.amazonaws.com/{bucket}/{key}'.format(
         region=settings.S3DIRECT_REGION,
         bucket=settings.AWS_STORAGE_BUCKET_NAME,
         key=key)
-
-def make_hash(ustring):
-    return hashlib.sha224(ustring.encode('unicode-escape')).hexdigest()
-

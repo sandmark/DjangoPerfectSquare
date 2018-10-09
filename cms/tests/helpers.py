@@ -31,17 +31,17 @@ SESSION = Session(aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
                   region_name=REGION)
 S3 = SESSION.resource('s3')
 BUCKET = S3.Bucket(BUCKET_NAME)
-BASE_KEY = 'test/'
+BASE_KEY = 'test'
 BASE_URL = 'https://s3-' + REGION + '.amazonaws.com/' + BUCKET_NAME + '/'
 
-def s3_key(filename):
+def s3_key(filename, key=BASE_KEY):
     """
     テスト用のkeyを生成して返す。
     """
-    return BASE_KEY + os.path.basename(filename)
+    return key + '/' + os.path.basename(filename)
 
-def is_s3_exists(filename):
-    key = s3_key(filename)
+def is_s3_exists(filename, key=BASE_URL):
+    key = s3_key(filename, key)
     try:
         S3.Object(BUCKET_NAME, key).load()
     except ClientError as e:
