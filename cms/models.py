@@ -51,16 +51,17 @@ def content_generate_thumbnail(sender, instance, created, **kwargs):
       10秒の位置で320x240のサムネイルを作成する場合:
         ffmpeg -i #{VIDEO}.mp4 -ss 10 -vframes 1 -f image2 -s 320x240 #{VIDEO}.jpg
     """
-    if created and instance.filepath and instance.filepath.endswith('mp4') and not instance.thumb:
-        thumb = '/tmp/thumb-{}.jpg'.format(instance.title)
-        fileurl = urllib.parse.quote(instance.filepath, safe=':/')
-        ffmpeg = 'ffmpeg -y -i "{filepath}" -ss 0 -vframes 1 -f image2 -s 320x240 {thumb}'
-        subprocess.call(ffmpeg.format(filepath=fileurl, thumb=thumb),
-                        shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    if created and instance.filepath and instance.filepath.endswith('mp4'):
+        if instance.thumb == 'false' or not instance.thumb:
+            thumb = '/tmp/thumb-{}.jpg'.format(instance.title)
+            fileurl = urllib.parse.quote(instance.filepath, safe=':/')
+            ffmpeg = 'ffmpeg -y -i "{filepath}" -ss 0 -vframes 1 -f image2 -s 320x240 {thumb}'
+            subprocess.call(ffmpeg.format(filepath=fileurl, thumb=thumb),
+                            shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-        if os.path.exists(thumb):
-            url = s3_upload_thumbnail(thumb)
-            instance.thumb = url
+            if os.path.exists(thumb):
+                url = s3_upload_thumbnail(thumb)
+                instance.thumb = url
 
 @receiver(post_delete, sender=Content)
 def content_delete_file_from_s3(sender, instance, **kwargs):
