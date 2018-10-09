@@ -25,6 +25,9 @@ class ThumbnailTest(TestCase):
         r = self.client.get(reverse('cms:index'))
         self.assertContains(r, 'no_image.png')
         self.client.get(reverse('cms:watch', kwargs={'pk': c.id}))
+
+        c = Content.objects.get(pk=c.id)
+        self.assertNotEqual(c.thumb, 'false')
         r = self.client.get(reverse('cms:index'))
         self.assertNotContains(r, 'no_image.png')
         self.assertContains(r, c.thumb)
