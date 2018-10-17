@@ -1,4 +1,5 @@
 .env
+.venv
 db.sqlite3
 
 PerfectSquare/__pycache__/
@@ -7,4 +8,4 @@ PerfectSquare/staticfiles/
 ,/
 /.coverage
 /cover/
-/venv/
+
