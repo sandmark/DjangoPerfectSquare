@@ -30,7 +30,7 @@ Markdown==2.6.9
 oauthlib==2.0.2
 parso==0.3.1
 psycopg2-binary==2.7.5
-py==1.4.34
+py==1.10.0
 pytest==3.2.2
 pytest-forked==0.2
 pytest-xdist==1.20.0
