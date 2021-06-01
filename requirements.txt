@@ -43,6 +43,6 @@ requests-oauthlib==0.8.0
 s3transfer==0.1.10
 sexpdata==0.0.3
 six==1.11.0
-urllib3==1.22
+urllib3==1.26.5
 virtualenv==15.1.0
 whitenoise==3.3.0
